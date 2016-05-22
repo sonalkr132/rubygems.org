@@ -3,8 +3,8 @@ require 'test_helper'
 class GemDependentTest < ActiveSupport::TestCase
   context "creating a new dependency_api" do
     setup do
-      @gem = create(:rubygem)
-      @gem_dependent = GemDependent.new(@gem.name)
+      rubygem = create(:rubygem)
+      @gem_dependent = GemDependent.new(rubygem.name)
     end
 
     should "have some state" do
@@ -20,63 +20,61 @@ class GemDependentTest < ActiveSupport::TestCase
     end
   end
 
-  context "with gem_names" do
-    context "no dependencies" do
-      setup do
-        @gem = create(:rubygem, name: "rack")
-        create(:version, number: "0.0.1", rubygem_id: @gem.id)
-        create(:version, number: "0.0.2", rubygem_id: @gem.id)
-      end
-
-      should "return all versions for a gem" do
-        deps = GemDependent.new(["rack"]).to_a
-        assert_equal(
-          [
-            { name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] },
-            { name: "rack", number: "0.0.2", platform: "ruby", dependencies: [] }
-          ],
-          deps
-        )
-      end
+  context "no dependencies" do
+    setup do
+      rubygem = create(:rubygem, name: "rack")
+      create(:version, number: "0.0.1", rubygem_id: rubygem.id)
+      create(:version, number: "0.0.2", rubygem_id: rubygem.id)
     end
 
-    context "has one dependency" do
-      setup do
-        rack = create(:rubygem, name: "rack")
-        version = create(:version, number: "0.0.1", rubygem_id: rack.id)
-        create(:version, number: "0.2.0", rubygem_id: rack.id)
-        create(:version, number: "1.0.1", rubygem_id: rack.id)
+    should "return all versions for a gem" do
+      deps = GemDependent.new(["rack"]).to_a
+      assert_equal(
+        [
+          { name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] },
+          { name: "rack", number: "0.0.2", platform: "ruby", dependencies: [] }
+        ],
+        deps
+      )
+    end
+  end
 
-        rubygem        = create(:rubygem, name: "foo")
-        gem_dependency = Gem::Dependency.new(rubygem.name, ['>= 0.0.0'])
-        create(:dependency, rubygem: rubygem, version: version, gem_dependency: gem_dependency)
-      end
+  context "has one dependency" do
+    setup do
+      rack = create(:rubygem, name: "rack")
+      version = create(:version, number: "0.0.1", rubygem_id: rack.id)
+      create(:version, number: "0.2.0", rubygem_id: rack.id)
+      create(:version, number: "1.0.1", rubygem_id: rack.id)
 
-      should "return foo as a dep of rack" do
-        result = {
-          name:         'rack',
-          number:       '0.0.1',
-          dependencies: [['foo', '>= 0.0.0']]
-        }
-
-        dep = GemDependent.new(["rack"]).to_a.first
-        result.each_pair do |k, v|
-          assert_equal v, dep[k]
-        end
-      end
+      rubygem        = create(:rubygem, name: "foo")
+      gem_dependency = Gem::Dependency.new(rubygem.name, ['>= 0.0.0'])
+      create(:dependency, rubygem: rubygem, version: version, gem_dependency: gem_dependency)
     end
 
-    context "non indexed versions" do
-      setup do
-        rack = create(:rubygem, name: "rack")
-        create(:version, number: "0.0.1", rubygem_id: rack.id)
-        create(:version, number: "0.1.1", rubygem_id: rack.id, indexed: false)
-      end
+    should "return foo as a dep of rack" do
+      result = {
+        name:         'rack',
+        number:       '0.0.1',
+        dependencies: [['foo', '>= 0.0.0']]
+      }
 
-      should "filter non indexed version" do
-        deps = GemDependent.new(["rack"]).to_a
-        assert_equal [{ name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] }], deps
+      dep = GemDependent.new(["rack"]).to_a.first
+      result.each_pair do |k, v|
+        assert_equal v, dep[k]
       end
+    end
+  end
+
+  context "non indexed versions" do
+    setup do
+      rack = create(:rubygem, name: "rack")
+      create(:version, number: "0.0.1", rubygem_id: rack.id)
+      create(:version, number: "0.1.1", rubygem_id: rack.id, indexed: false)
+    end
+
+    should "filter non indexed version" do
+      deps = GemDependent.new(["rack"]).to_a
+      assert_equal [{ name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] }], deps
     end
   end
 end
