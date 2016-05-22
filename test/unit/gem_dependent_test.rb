@@ -21,32 +21,49 @@ class GemDependentTest < ActiveSupport::TestCase
   end
 
   context "with gem_names" do
-    setup do
-      @gem = create(:rubygem, name: "rack")
-      create(:version, number: "0.0.1", rubygem_id: @gem.id)
-      create(:version, number: "0.0.2", rubygem_id: @gem.id)
+    context "no dependencies" do
+      setup do
+        @gem = create(:rubygem, name: "rack")
+        create(:version, number: "0.0.1", rubygem_id: @gem.id)
+        create(:version, number: "0.0.2", rubygem_id: @gem.id)
+      end
 
-      @gem2 = create(:rubygem, name: "rack2")
-      create(:version, number: "0.0.1", rubygem_id: @gem2.id)
+      should "return all versions for a gem" do
+        deps = GemDependent.new(["rack"]).to_a
+        assert_equal(
+          [
+            { name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] },
+            { name: "rack", number: "0.0.2", platform: "ruby", dependencies: [] }
+          ],
+          deps
+        )
+      end
     end
 
-    should "return an array with dependencies" do
-      deps = GemDependent.new(["rack2"]).to_a
-      assert_equal(
-        [{ name: "rack2", number: "0.0.1", platform: "ruby", dependencies: [] }],
-        deps
-      )
-    end
+    context "has one dependency" do
+      setup do
+        rack = create(:rubygem, name: "rack")
+        version = create(:version, number: "0.0.1", rubygem_id: rack.id)
+        create(:version, number: "0.2.0", rubygem_id: rack.id)
+        create(:version, number: "1.0.1", rubygem_id: rack.id)
 
-    should "return all versions for a gem" do
-      deps = GemDependent.new(["rack"]).to_a
-      assert_equal(
-        [
-          { name: "rack", number: "0.0.2", platform: "ruby", dependencies: [] },
-          { name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] }
-        ],
-        deps
-      )
+        rubygem        = create(:rubygem, name: "foo")
+        gem_dependency = Gem::Dependency.new(rubygem.name, ['>= 0.0.0'])
+        create(:dependency, rubygem: rubygem, version: version, gem_dependency: gem_dependency)
+      end
+
+      should "return foo as a dep of rack" do
+        result = {
+          name:         'rack',
+          number:       '0.0.1',
+          dependencies: [['foo', '>= 0.0.0']]
+        }
+
+        dep = GemDependent.new(["rack"]).to_a.first
+        result.each_pair do |k, v|
+          assert_equal v, dep[k]
+        end
+      end
     end
   end
 
