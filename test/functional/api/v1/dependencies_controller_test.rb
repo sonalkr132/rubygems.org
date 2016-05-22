@@ -74,14 +74,14 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       result = [
         {
           "name"         => 'myrails',
-          "number"       => '3.0.0',
+          "number"       => '1.0.0',
           "platform"     => 'ruby',
           "dependencies" => []
         },
 
         {
           "name"         => 'myrails',
-          "number"       => '1.0.0',
+          "number"       => '3.0.0',
           "platform"     => 'ruby',
           "dependencies" => []
         },

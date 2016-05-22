@@ -34,7 +34,7 @@ class GemDependent
 
   def fetch_dependency_from_db(gem_name)
     gem_record = Rubygem.includes(:versions).find_by_name!(gem_name)
-    gem_record.versions.includes(:dependencies).sort_by(&:number).reverse_each.map do |version|
+    gem_record.versions.includes(:dependencies).sort_by(&:number).map do |version|
       version_deps = version.dependencies.select { |d| d.scope == 'runtime' }
 
       {
