@@ -65,5 +65,18 @@ class GemDependentTest < ActiveSupport::TestCase
         end
       end
     end
+
+    context "non indexed versions" do
+      setup do
+        rack = create(:rubygem, name: "rack")
+        create(:version, number: "0.0.1", rubygem_id: rack.id)
+        create(:version, number: "0.1.1", rubygem_id: rack.id, indexed: false)
+      end
+
+      should "filter non indexed version" do
+        deps = GemDependent.new(["rack"]).to_a
+        assert_equal [{ name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] }], deps
+      end
+    end
   end
 end
