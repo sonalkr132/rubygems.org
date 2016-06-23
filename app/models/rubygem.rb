@@ -1,4 +1,4 @@
-class Rubygem < ActiveRecord::Base
+class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
