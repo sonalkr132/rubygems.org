@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 # This can be removed once all gems depend on > 3.0
 gem 'mime-types', '~> 2.99', require: 'mime/types/columnar'
 
-gem 'rails', '~> 4.2.6'
-gem 'rails-i18n'
+gem 'rails', '~> 5.0.0.rc2'
+gem 'rails-i18n', '~> 5.0.0.beta4'
 
 gem 'autoprefixer-rails'
 gem 'aws-sdk', '~> 2.2'
@@ -28,7 +28,7 @@ gem 'jquery-rails'
 gem 'mail'
 gem 'multi_json'
 gem 'newrelic_rpm'
-gem 'paul_revere', '~> 2.0'
+gem 'paul_revere', '~> 2.1.0.rc1'
 gem 'pg'
 gem 'psych', '~> 2.0.12'
 gem 'rack'
@@ -52,10 +52,7 @@ group :development, :test do
   gem 'toxiproxy', '~> 0.1.3'
 end
 
-group :development do
-  gem 'quiet_assets'
-  gem 'rails-erd'
-end
+gem 'rails-erd', group: :development
 
 group :test do
   gem 'minitest', require: false
