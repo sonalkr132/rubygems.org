@@ -32,7 +32,7 @@
 <div id="profile">
   <div class="profile-list">
     <ul>
-      <%= render :partial => 'rubygem', :collection => @rubygems + @extra_rubygems, :locals => {:graph => false}  %>
+      <%= render :partial => 'rubygem', :collection => @rubygems, :locals => {:graph => false}  %>
     </ul>
   </div>
 </div>
