@@ -28,9 +28,6 @@ module Gemcutter
     config.plugins = [:dynamic_form]
 
     config.autoload_paths << Rails.root.join('lib')
-
-    # TODO: Remove this. This will be dealt with after tests are passing
-    ActiveSupport.halt_callback_chains_on_return_false = true
   end
 
   def self.config

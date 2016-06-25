@@ -78,15 +78,12 @@ class Dependency < ApplicationRecord
 
     if gem_dependency.class != Gem::Dependency
       errors.add :rubygem, "Please use Gem::Dependency to specify dependencies."
-      return false
+      throw :abort
     end
 
-    if gem_dependency.name.empty?
-      errors.add :rubygem, "Blank is not a valid dependency name"
-      return false
-    end
-
-    true
+    return if gem_dependency.name.present?
+    errors.add :rubygem, "Blank is not a valid dependency name"
+    throw :abort
   end
 
   def use_existing_rubygem
@@ -95,8 +92,6 @@ class Dependency < ApplicationRecord
     self.rubygem = Rubygem.find_by_name(gem_dependency.name)
 
     self.unresolved_name = gem_dependency.name unless rubygem
-
-    true
   end
 
   def parse_gem_dependency

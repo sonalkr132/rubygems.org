@@ -9,11 +9,8 @@ class Ownership < ApplicationRecord
   private
 
   def keep_last_owner
-    if rubygem.owners.count == 1
-      errors[:base] << "Can't delete last owner of a gem."
-      false
-    else
-      true
-    end
+    return unless rubygem.owners.count == 1
+    errors[:base] << "Can't delete last owner of a gem."
+    throw :abort
   end
 end
