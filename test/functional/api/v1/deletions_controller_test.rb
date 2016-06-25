@@ -116,9 +116,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
         should respond_with :unprocessable_entity
         should "not re-record the deletion" do
-          assert_equal 1, Deletion.count(user: @user,
-                                         rubygem: @rubygem.name,
-                                         number: @v1.number)
+          assert_equal 1, Deletion.count
         end
       end
     end
