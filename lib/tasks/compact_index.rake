@@ -43,6 +43,7 @@ namespace :compact_index do
     without_info_checksum.find_each do |rubygem|
       cs = Digest::MD5.hexdigest(CompactIndex.info(rubygem.compact_index_info))
       rubygem.versions.each do |version|
+        next if version.sha256.nil?
         version.update_attribute :info_checksum, cs
       end
       i += 1
