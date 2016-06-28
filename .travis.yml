@@ -31,7 +31,7 @@ before_script:
   - bundle exec rake db:create db:migrate db:test:prepare
 
 script:
-  - bundle exec rails test
+  - bundle exec rails test --seed 12755
   - bundle exec rake rubocop
   - script/brakeman
   - bundle exec cap -T > /dev/null
