@@ -23,7 +23,7 @@ class Rubygem < ActiveRecord::Base
 
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
-  after_commit :update_tsvector, on: [:create, :update]
+  after_create :update_tsvector
 
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
