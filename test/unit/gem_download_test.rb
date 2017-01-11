@@ -6,6 +6,20 @@ class GemDownloadTest < ActiveSupport::TestCase
     Rubygem.__elasticsearch__.create_index! force: true
   end
 
+  def import_and_refresh
+    Rubygem.import
+    Rubygem.__elasticsearch__.refresh_index!
+    # wait for indexing to finish
+    Rubygem.__elasticsearch__.client.cluster.health wait_for_status: 'yellow'
+  end
+
+  def es_downloads(id)
+    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                    type: 'rubygem',
+                                                    id: id
+    response['_source']['downloads']
+  end
+
   context ".increment" do
     should "not update if download doesnt exist" do
       assert_nil GemDownload.increment(1, rubygem_id: 1)
@@ -53,12 +67,12 @@ class GemDownloadTest < ActiveSupport::TestCase
 
   context ".bulk_update" do
     setup do
-      @versions = Array.new(2) { create(:version) }
-      @gems     = @versions.map(&:rubygem)
+      @gems = Array.new(2) { create(:rubygem) }
+      @versions = Array.new(2) { create(:version, rubygem: @gems[1]) }
       @versions << create(:version, rubygem: @gems[0])
       @counts   = Array.new(3) { rand(100) }
       @data     = @versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
-      @gem_downloads = [(@counts[0] + @counts[2]), @counts[1]]
+      @gem_downloads = [@counts[2], (@counts[0] + @counts[1])]
       Rubygem.import
     end
 
@@ -88,6 +102,22 @@ class GemDownloadTest < ActiveSupport::TestCase
         GemDownload.bulk_update(@data)
         total_count = @counts.inject(0, :+)
         assert_equal total_count, GemDownload.total_count
+      end
+    end
+
+    context "rubygems has initial downloads" do
+      setup do
+        gem_download = GemDownload.find_by(rubygem_id: @gems[0].id, version_id: 0)
+        gem_download.update_attribute(:count, 10)
+        @gem_downloads[0] += 10
+        import_and_refresh
+      end
+
+      should "update rubygems downloads irrespective of rubygem_ids order" do
+        GemDownload.bulk_update(@data)
+        2.times.each do |i|
+          assert_equal @gem_downloads[i], es_downloads(@gems[i].id)
+        end
       end
     end
   end
