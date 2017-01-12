@@ -6,6 +6,20 @@ class GemDownloadTest < ActiveSupport::TestCase
     Rubygem.__elasticsearch__.create_index! force: true
   end
 
+  def import_and_refresh
+    Rubygem.import
+    Rubygem.__elasticsearch__.refresh_index!
+    # wait for indexing to finish
+    Rubygem.__elasticsearch__.client.cluster.health wait_for_status: 'yellow'
+  end
+
+  def es_downloads(id)
+    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                    type: 'rubygem',
+                                                    id: id
+    response['_source']['downloads']
+  end
+
   context ".increment" do
     should "not update if download doesnt exist" do
       assert_nil GemDownload.increment(1, rubygem_id: 1)
@@ -52,42 +66,69 @@ class GemDownloadTest < ActiveSupport::TestCase
   end
 
   context ".bulk_update" do
-    setup do
-      @versions = Array.new(2) { create(:version) }
-      @gems     = @versions.map(&:rubygem)
-      @versions << create(:version, rubygem: @gems[0])
-      @counts   = Array.new(3) { rand(100) }
-      @data     = @versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
-      @gem_downloads = [(@counts[0] + @counts[2]), @counts[1]]
-      Rubygem.import
-    end
-
-    should "write the proper values" do
-      GemDownload.bulk_update(@data)
-      3.times.each do |i|
-        assert_equal @counts[i], GemDownload.count_for_version(@versions[i].id)
+    context "with multiple version of same gem" do
+      setup do
+        @versions = Array.new(2) { create(:version) }
+        @gems     = @versions.map(&:rubygem)
+        @versions << create(:version, rubygem: @gems[0])
+        @counts   = Array.new(3) { rand(100) }
+        @data     = @versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
+        @gem_downloads = [(@counts[0] + @counts[2]), @counts[1]]
+        Rubygem.import
       end
-      assert_equal @gem_downloads[0], GemDownload.count_for_rubygem(@gems[0].id)
-      assert_equal @gem_downloads[1], GemDownload.count_for_rubygem(@gems[1].id)
-    end
 
-    should "update downloads count of ES index" do
-      GemDownload.bulk_update(@data)
-      2.times.each do |i|
-        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                        type: 'rubygem',
-                                                        id: @gems[i].id
-
-        assert_equal @gem_downloads[i], response['_source']['downloads']
-      end
-    end
-
-    should "update total_count when elasticsearch is down" do
-      requires_toxiproxy
-      Toxiproxy[:elasticsearch].down do
+      should "write the proper values" do
         GemDownload.bulk_update(@data)
-        total_count = @counts.inject(0, :+)
-        assert_equal total_count, GemDownload.total_count
+        3.times.each do |i|
+          assert_equal @counts[i], GemDownload.count_for_version(@versions[i].id)
+        end
+        assert_equal @gem_downloads[0], GemDownload.count_for_rubygem(@gems[0].id)
+        assert_equal @gem_downloads[1], GemDownload.count_for_rubygem(@gems[1].id)
+      end
+
+      should "update downloads count of ES index" do
+        GemDownload.bulk_update(@data)
+        2.times.each do |i|
+          response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                          type: 'rubygem',
+                                                          id: @gems[i].id
+
+          assert_equal @gem_downloads[i], response['_source']['downloads']
+        end
+      end
+
+      should "update total_count when elasticsearch is down" do
+        requires_toxiproxy
+        Toxiproxy[:elasticsearch].down do
+          GemDownload.bulk_update(@data)
+          total_count = @counts.inject(0, :+)
+          assert_equal total_count, GemDownload.total_count
+        end
+      end
+    end
+
+    context "with initial downloads" do
+      setup do
+        @gem_downloads = Array.new(3) { rand(100) }
+        @gems  = Array.new(3) { |i| create(:rubygem, downloads: @gem_downloads[i]) }
+        counts = Array.new(3) { rand(100) }
+        @data  = []
+
+        [2, 0, 1].each do |i|
+          create(:version, rubygem: @gems[i]).tap do |version|
+            @data << [version.full_name, counts[i]]
+            @gem_downloads[i] += counts[i]
+          end
+        end
+        import_and_refresh
+      end
+
+      should "update rubygems downloads irrespective of rubygem_ids order" do
+        GemDownload.bulk_update(@data)
+        2.times.each do |i|
+          assert_equal @gem_downloads[i], es_downloads(@gems[i].id)
+          assert_equal @gem_downloads[i], GemDownload.count_for_rubygem(@gems[i].id)
+        end
       end
     end
   end
