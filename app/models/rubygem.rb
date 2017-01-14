@@ -275,7 +275,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def reverse_dependencies
-    self.class.reverse_dependencies(name)
+    Rails.cache.fetch("reverse_dep/#{name}") { self.class.reverse_dependencies(name) }
   end
 
   private

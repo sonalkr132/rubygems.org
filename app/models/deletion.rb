@@ -30,7 +30,7 @@ class Deletion < ActiveRecord::Base
   end
 
   def expire_cache
-    GemCachePurger.call(rubygem)
+    GemCachePurger.new(rubygem, number).call
   end
 
   def remove_from_index

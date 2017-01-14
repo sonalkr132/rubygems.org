@@ -101,7 +101,7 @@ class Pusher
     @version_id = version.id
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
-    GemCachePurger.call(rubygem.name)
+    GemCachePurger.new(rubygem.name, @version_id).call
     enqueue_web_hook_jobs
     StatsD.increment 'push.success'
   end
