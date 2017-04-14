@@ -39,9 +39,6 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  require 'clearance_backdoor'
-  config.middleware.use ClearanceBackdoor
-
   config.active_support.test_order = :random
 
   config.cache_store = :dalli_store
