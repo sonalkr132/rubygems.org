@@ -123,7 +123,7 @@ class Pusher
     set_info_checksum
 
     true
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique
     false
   end
 
