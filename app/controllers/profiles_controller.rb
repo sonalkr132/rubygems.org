@@ -5,7 +5,7 @@ class ProfilesController < ApplicationController
   helper_method :mfa_enabled?
 
   def adoptions
-    @seeked_adoptions = current_user.adoptions.seeked
+    @opened_adoptions = current_user.adoptions.opened
     @requested_adoptions = current_user.adoptions.requested
   end
 
