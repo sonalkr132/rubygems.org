@@ -7,9 +7,7 @@ require 'bourne'
 require 'capybara/rails'
 require 'clearance/test_unit'
 require 'shoulda'
-require 'helpers/gem_helpers'
-require 'helpers/email_helpers'
-require 'helpers/es_helper'
+Dir.glob(Rails.root + "test/helpers/*.rb").each { |f| require f }
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
@@ -17,7 +15,6 @@ Aws.config[:stub_responses] = true
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include GemHelpers
-  include EmailHelpers
 
   setup do
     I18n.locale = :en
