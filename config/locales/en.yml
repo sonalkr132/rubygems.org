@@ -41,7 +41,7 @@ en:
         password: Password
   adoption_applications:
     approve: Approve
-    cancel: Cancel
+    close: close
     create:
       success: adoption application sent to owner(s) of %{gem}
     request: Request
@@ -126,10 +126,10 @@ en:
     adoption_application_approved:
       congratulations: Congratulations! Your request for adoption of %{gem} has been approved.
       subject: adoption application approved for %{gem}
-    adoption_application_canceled:
+    adoption_application_closed:
       sorry: We are sorry to tell you that your request for adoption of %{gem} has been rejected.
       subject: adoption application rejected for %{gem}
-    adoption_applicationed:
+    adoption_application_applied:
       note: 'Adoption note:'
       request: '%{user} has requested adoption of %{gem}. Please, consider adding
         %{user} as owner of %{gem} by approving their adoption application.'

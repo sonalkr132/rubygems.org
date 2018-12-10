@@ -129,4 +129,8 @@ class ApplicationController < ActionController::Base
   def limit_page(max_page)
     render_404 if @page > max_page
   end
+
+  def render_bad_request
+    render plain: "Invalid request", status: :bad_request
+  end
 end

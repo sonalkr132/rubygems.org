@@ -413,7 +413,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#can_cancel?" do
+  context "#can_close?" do
     setup do
       @user = create(:user)
       @rubygem = create(:rubygem)
@@ -423,34 +423,34 @@ class UserTest < ActiveSupport::TestCase
     context "when user is owner of gem" do
       setup { @rubygem.ownerships.create(user: @user) }
       should "return true" do
-        assert @user.can_cancel?(@adoption_application)
+        assert @user.can_close?(@adoption_application)
       end
     end
 
     context "when user is adoption applicationer" do
       setup { @adoption_application.update(user_id: @user.id) }
       should "return true" do
-        assert @user.can_cancel?(@adoption_application)
+        assert @user.can_close?(@adoption_application)
       end
     end
 
     context "when user is neither owner nor requester" do
       should "return false" do
-        refute @user.can_cancel?(@adoption_application)
+        refute @user.can_close?(@adoption_application)
       end
     end
 
-    context "when adoption_application is canceled" do
-      setup { @adoption_application.canceled! }
+    context "when adoption_application is closed" do
+      setup { @adoption_application.closed! }
       should "return false" do
-        refute @user.can_cancel?(@adoption_application)
+        refute @user.can_close?(@adoption_application)
       end
     end
 
     context "when adoption is approved" do
       setup { @adoption_application.approved! }
       should "return false" do
-        refute @user.can_cancel?(@adoption_application)
+        refute @user.can_close?(@adoption_application)
       end
     end
   end
@@ -474,8 +474,8 @@ class UserTest < ActiveSupport::TestCase
         end
       end
 
-      context "adoption status is canceled" do
-        setup { @adoption_application.canceled! }
+      context "adoption status is closed" do
+        setup { @adoption_application.closed! }
         should "return false" do
           refute @user.can_approve?(@adoption_application)
         end

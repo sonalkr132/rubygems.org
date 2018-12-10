@@ -47,24 +47,24 @@ class AdoptionsTest < SystemTest
     assert page.has_selector? "#flash_success", text: "adoption application sent to owner(s) of #{@rubygem.name}"
   end
 
-  test "canceling adoption by requester" do
+  test "closeing adoption by requester" do
     create(:adoption_application, rubygem: @rubygem, user: @user, note: "example note")
     sign_in @user
 
     visit rubygem_adoptions_path(@rubygem)
-    click_button "Cancel"
+    click_button "close"
 
-    assert page.has_selector? "#flash_success", text: "#{@user.name}'s adoption application for #{@rubygem.name} has been canceled"
+    assert page.has_selector? "#flash_success", text: "#{@user.name}'s adoption application for #{@rubygem.name} has been closed"
     assert page.has_no_content? "example note"
   end
 
-  test "canceling adoption by owner" do
+  test "closeing adoption by owner" do
     adoption_application = create(:adoption_application, rubygem: @rubygem, note: "example note")
     @rubygem.ownerships.create(user: @user)
     sign_in @user
 
     visit rubygem_adoptions_path(@rubygem)
-    click_button "Cancel"
+    click_button "close"
 
     mail = last_email
     assert mail.to.include? adoption_application.user.email
@@ -73,7 +73,7 @@ class AdoptionsTest < SystemTest
     expected_body = "We are sorry to tell you that your request for adoption of #{@rubygem.name} has been rejected."
     assert mail.to_s.include? expected_body
 
-    assert page.has_selector? "#flash_success", text: "#{adoption_application.user.name}'s adoption application for #{@rubygem.name} has been canceled"
+    assert page.has_selector? "#flash_success", text: "#{adoption_application.user.name}'s adoption application for #{@rubygem.name} has been closed"
     assert page.has_no_content? "example note"
   end
 
@@ -90,7 +90,8 @@ class AdoptionsTest < SystemTest
     expected_subject = "adoption application approved for #{@rubygem.name}"
     assert_equal expected_subject, mail.subject
 
-    assert page.has_selector? "#flash_success", text: "#{adoption_application.user.name}'s adoption application for #{@rubygem.name} has been approved"
+    applicant_name = adoption_application.user.name
+    assert page.has_selector? "#flash_success", text: "#{applicant_name}'s adoption application for #{@rubygem.name} has been approved"
     assert page.has_no_content? "example note"
     assert @rubygem.owned_by? adoption_application.user
   end

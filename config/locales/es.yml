@@ -41,7 +41,7 @@ es:
         password: Contraseña
   adoption_applications:
     approve:
-    cancel:
+    close:
     create:
       success:
     request:
@@ -123,10 +123,10 @@ es:
     adoption_application_approved:
       congratulations:
       subject:
-    adoption_application_canceled:
+    adoption_application_closed:
       sorry:
       subject:
-    adoption_applicationed:
+    adoption_application_applied:
       note:
       request:
       subject:

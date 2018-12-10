@@ -2,7 +2,7 @@
   <div id="markup" class="gem__desc">
     <%= simple_markup(adoption_application.note) %>
   </div>
-  <%= current_user&.can_cancel?(adoption_application) %>
+  <%= current_user&.can_close?(adoption_application) %>
   <%= render(
     partial: "adoption_applications/edit",
     locals: { status: "approved", button_text: t("adoption_applications.approve"), adoption_application: adoption_application }
@@ -10,6 +10,6 @@
 
   <%= render(
     partial: "adoption_applications/edit",
-    locals: { status: "canceled", button_text: t("adoption_applications.cancel"), adoption_application: adoption_application }
-  ) if current_user&.can_cancel?(adoption_application) %>
+    locals: { status: "closed", button_text: t("adoption_applications.close"), adoption_application: adoption_application }
+  ) if current_user&.can_close?(adoption_application) %>
 </div>

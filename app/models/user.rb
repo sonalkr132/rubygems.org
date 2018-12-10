@@ -208,7 +208,7 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
-  def can_cancel?(adoption_application)
+  def can_close?(adoption_application)
     return false unless adoption_application.status == "opened"
     return true if adoption_application.user == self
 
