@@ -39,24 +39,29 @@ pt-BR:
         email: Email
         handle: Usuário
         password: Senha
+  adoption_applications:
+    approve:
+    cancel:
+    create:
+      success:
+    request:
+    heading:
+    requested:
+    update:
+      success:
   adoptions:
     create:
-      opened:
-      requested:
+      create:
+      success:
     default:
       no_open_adoption:
+    delete:
+      delete:
+    destroy:
+      success:
     index:
       adoptions:
-      adoption_requests:
-      approve:
-      cancel:
-      open:
-    update:
-      message:
-    request:
-      requested:
-      request_heading:
-      request:
+      adoption_applications:
   dashboards:
     show:
       creating_link_text: criar
@@ -115,13 +120,13 @@ pt-BR:
         sign_out: Sair
         sign_up: Cadastrar
   mailer:
-    adoption_approved:
+    adoption_application_approved:
       congratulations:
       subject:
-    adoption_canceled:
+    adoption_application_canceled:
       sorry:
       subject:
-    adoption_requested:
+    adoption_applicationed:
       note:
       request:
       subject:

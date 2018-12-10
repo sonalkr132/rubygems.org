@@ -1,0 +1,13 @@
+<% if adoption_application %>
+  <h3 class="t-list__heading"> <%= t("adoption_applications.requested", gem: @rubygem.name) %> </h3>
+  <%= render partial: "adoption_applications/show", locals: { adoption_application: adoption_application } %>
+<% elsif signed_in? %>
+  <div class="gem_intro">
+    <h3 class="t-list__heading"> <%= t("adoption_applications.heading") %> </h3>
+    <%= render partial: "adoption_applications/create", locals: { status: "requested", button_text: t("adoption_applications.request") } %>
+  </div>
+<% else %>
+  <div class="t-body">
+    <%= link_to t(".header.sign_in"), sign_in_path, class: "gem__link t-list__item" %>
+  </div>
+<% end %>

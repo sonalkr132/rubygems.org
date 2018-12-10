@@ -3,6 +3,7 @@ class Rubygem < ApplicationRecord
   include RubygemSearchable
 
   has_many :adoptions, dependent: :destroy
+  has_many :adoption_applications, dependent: :destroy
   has_many :ownerships, dependent: :destroy
   has_many :owners, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
@@ -285,10 +286,10 @@ class Rubygem < ApplicationRecord
     reverse_dependencies.where("d.scope ='runtime'")
   end
 
-  def approve_adoption!(adoption)
-    ownerships.create(user: adoption.user)
-    adoptions.opened.map(&:approved!)
-    adoption.update(status: :approved)
+  def approve_adoption_application!(adoption_application, user_id)
+    ownerships.create(user: adoption_application.user)
+    adoptions.destroy_all
+    adoption_application.update(status: :approved, approver_id: user_id)
   end
 
   private

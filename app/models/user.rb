@@ -17,6 +17,7 @@ class User < ApplicationRecord
   before_destroy :yank_gems
 
   has_many :adoptions, dependent: :destroy
+  has_many :adoption_applications, dependent: :destroy
   has_many :ownerships, dependent: :destroy
   has_many :rubygems, through: :ownerships
 
@@ -207,17 +208,17 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
-  def can_cancel?(adoption)
-    return false unless adoption.status =~ /^opened|requested$/
-    return true if adoption.user == self
+  def can_cancel?(adoption_application)
+    return false unless adoption_application.status == "opened"
+    return true if adoption_application.user == self
 
-    rubygem = Rubygem.find(adoption.rubygem_id)
+    rubygem = Rubygem.find(adoption_application.rubygem_id)
     rubygem.owned_by?(self)
   end
 
-  def can_approve?(adoption)
-    return false unless adoption.status == "requested"
-    adoption.rubygem.owned_by? self
+  def can_approve?(adoption_application)
+    return false unless adoption_application.status == "opened"
+    adoption_application.rubygem.owned_by? self
   end
 
   private

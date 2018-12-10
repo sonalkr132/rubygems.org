@@ -39,24 +39,29 @@ zh-CN:
         email: Email
         handle: 账号
         password: 密码
+  adoption_applications:
+    approve:
+    cancel:
+    create:
+      success:
+    request:
+    heading:
+    requested:
+    update:
+      success:
   adoptions:
     create:
-      opened:
-      requested:
+      create:
+      success:
     default:
       no_open_adoption:
+    delete:
+      delete:
+    destroy:
+      success:
     index:
       adoptions:
-      adoption_requests:
-      approve:
-      cancel:
-      open:
-    update:
-      message:
-    request:
-      requested:
-      request_heading:
-      request:
+      adoption_applications:
   dashboards:
     show:
       creating_link_text: 创建
@@ -115,13 +120,13 @@ zh-CN:
         sign_out: 退出
         sign_up: 注册
   mailer:
-    adoption_approved:
+    adoption_application_approved:
       congratulations:
       subject:
-    adoption_canceled:
+    adoption_application_canceled:
       sorry:
       subject:
-    adoption_requested:
+    adoption_applicationed:
       note:
       request:
       subject:

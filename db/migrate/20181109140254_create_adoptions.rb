@@ -4,7 +4,6 @@ class CreateAdoptions < ActiveRecord::Migration[5.2]
       t.references :user, foreign_key: true
       t.references :rubygem, foreign_key: true
       t.string :note
-      t.integer :status, null: false
     end
   end
 end

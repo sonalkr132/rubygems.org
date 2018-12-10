@@ -1,0 +1,12 @@
+<% unless adoption_applications.empty? %>
+  <h3 class="t-list__heading"><%= heading %></h3>
+  <ol class="t-list__items">
+    <% for adoption_application in adoption_applications do %>
+      <li class="t-list__item">
+        <h3 class="gems__gem__name"><%= yield adoption_application %></h3>
+        <%= render partial: "adoption_applications/show", locals: { adoption_application: adoption_application } %>
+      </li>
+    <% end %>
+  </ol>
+  <hr />
+<% end %>

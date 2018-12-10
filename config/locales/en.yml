@@ -39,27 +39,32 @@ en:
         email: Email address
         handle: Username
         password: Password
+  adoption_applications:
+    approve: Approve
+    cancel: Cancel
+    create:
+      success: adoption application sent to owner(s) of %{gem}
+    request: Request
+    heading: 'Request adoption:'
+    requested: 'You have requested adoption of %{gem}:'
+    update:
+      success: '%{user}''s adoption application for %{gem} has been %{status}'
   adoptions:
     create:
-      opened: '%{gem} has been put up for adoption'
-      requested: Adoption request sent to owner(s) of %{gem}
+      create: Create
+      success: '%{gem} has been put up for adoption'
     default:
       no_open_adoption: Owner(s) of %{gem} are not looking for maintainers. You can still request an adoption if
         you feel this gem could be of greater service with your ownership and you can convince
         existing owner(s) of the gem of the same.
         We will notify owner(s) of %{gem} with your adoption note, which you can fill out below.
+    delete:
+      delete: Delete
+    destroy:
+      success: Adoption for %{gem} has been deleted
     index:
       adoptions: Adoptions
-      adoption_requests: 'Adoption requests:'
-      approve: Approve
-      cancel: Cancel
-      open: Open
-    update:
-      message: '%{user}''s adoption request for %{gem} has been %{status}'
-    request:
-      requested: 'You have requested adoption of %{gem}:'
-      request_heading: 'Request adoption:'
-      request: Request
+      adoption_applications: 'adoption applications:'
   dashboards:
     show:
       creating_link_text: creating
@@ -118,17 +123,17 @@ en:
         sign_out: Sign out
         sign_up: Sign up
   mailer:
-    adoption_approved:
+    adoption_application_approved:
       congratulations: Congratulations! Your request for adoption of %{gem} has been approved.
-      subject: Adoption request approved for %{gem}
-    adoption_canceled:
+      subject: adoption application approved for %{gem}
+    adoption_application_canceled:
       sorry: We are sorry to tell you that your request for adoption of %{gem} has been rejected.
-      subject: Adoption request rejected for %{gem}
-    adoption_requested:
+      subject: adoption application rejected for %{gem}
+    adoption_applicationed:
       note: 'Adoption note:'
       request: '%{user} has requested adoption of %{gem}. Please, consider adding
-        %{user} as owner of %{gem} by approving their adoption request.'
-      subject: Adoption request for %{gem}
+        %{user} as owner of %{gem} by approving their adoption application.'
+      subject: adoption application for %{gem}
     confirm_your_email: Please confirm your email address with the link sent to you email.
     confirmation_subject: Please confirm your email address with RubyGems.org
     email_confirmation:

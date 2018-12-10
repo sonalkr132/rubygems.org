@@ -10,17 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181020173922) do
+ActiveRecord::Schema.define(version: 2018_12_09_105446) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
 
+  create_table "adoption_applications", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "rubygem_id"
+    t.integer "approver_id"
+    t.string "note"
+    t.integer "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rubygem_id"], name: "index_adoption_applications_on_rubygem_id"
+    t.index ["user_id"], name: "index_adoption_applications_on_user_id"
+  end
+
   create_table "adoptions", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "rubygem_id"
     t.string "note"
-    t.integer "status", null: false
     t.index ["rubygem_id"], name: "index_adoptions_on_rubygem_id"
     t.index ["user_id"], name: "index_adoptions_on_user_id"
   end
@@ -202,6 +213,8 @@ ActiveRecord::Schema.define(version: 20181020173922) do
     t.integer  "rubygem_id"
   end
 
+  add_foreign_key "adoption_applications", "rubygems"
+  add_foreign_key "adoption_applications", "users"
   add_foreign_key "adoptions", "rubygems"
   add_foreign_key "adoptions", "users"
 end

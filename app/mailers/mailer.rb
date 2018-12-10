@@ -30,35 +30,35 @@ class Mailer < ActionMailer::Base
          subject: I18n.t('mailer.deletion_failed.subject')
   end
 
-  def adoption_requested(adoption)
-    adoption = Adoption.find(adoption['id'])
-    adoption.rubygem.owners.each do |owner|
+  def adoption_applicationed(adoption_application)
+    adoption_application = AdoptionApplication.find(adoption_application['id'])
+    adoption_application.rubygem.owners.each do |owner|
       mail from: Clearance.configuration.mailer_sender,
            to: owner.email,
-           subject: I18n.t('mailer.adoption_requested.subject', gem: adoption.rubygem.name) do |format|
-        format.html { render locals: { adoption: adoption, owner: owner } }
+           subject: I18n.t('mailer.adoption_applicationed.subject', gem: adoption_application.rubygem.name) do |format|
+        format.html { render locals: { adoption_application: adoption_application, owner: owner } }
       end
     end
   end
 
-  def adoption_canceled(rubygem, user)
+  def adoption_application_canceled(rubygem, user)
     user = User.find(user['id'])
     rubygem = Rubygem.find(rubygem['id'])
 
     mail from: Clearance.configuration.mailer_sender,
          to: user.email,
-         subject: I18n.t('mailer.adoption_canceled.subject', gem: rubygem.name) do |format|
+         subject: I18n.t('mailer.adoption_application_canceled.subject', gem: rubygem.name) do |format|
       format.html { render locals: { rubygem: rubygem, user: user } }
     end
   end
 
-  def adoption_approved(rubygem, user)
+  def adoption_application_approved(rubygem, user)
     user = User.find(user['id'])
     rubygem = Rubygem.find(rubygem['id'])
 
     mail from: Clearance.configuration.mailer_sender,
          to: user.email,
-         subject: I18n.t('mailer.adoption_approved.subject', gem: rubygem.name) do |format|
+         subject: I18n.t('mailer.adoption_application_approved.subject', gem: rubygem.name) do |format|
       format.html { render locals: { rubygem: rubygem, user: user } }
     end
   end
