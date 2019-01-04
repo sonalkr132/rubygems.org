@@ -43,7 +43,7 @@ before_script:
   - bundle exec rake db:create db:migrate db:test:prepare
 
 script:
-  - bundle exec rails test
+  - bundle exec rails test test/integration/null_char_param_test.rb
   - bundle exec rake rubocop
   - bundle audit check
   - brakeman -c config/brakeman.yml -o /dev/stdout
