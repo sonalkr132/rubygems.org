@@ -94,7 +94,7 @@ module RubygemsHelper
 
   def link_to_user(user)
     link_to gravatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
-        alt: user.display_handle, title: user.display_handle
+      alt: user.display_handle, title: user.display_handle
   end
 
   def nice_date_for(time)
