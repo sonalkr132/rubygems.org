@@ -11,12 +11,10 @@ class ParallelPusherTest < ActiveSupport::TestCase
     end
 
     teardown do
-      @user.destroy
-      @rubygem = Rubygem.find_by(name: 'hola')
-      @rubygem.versions.destroy_all
-      @rubygem.destroy
-      Delayed::Job.delete_all
-      GemDownload.delete_all
+      Version.delete_all
+      ActiveRecord::Base.connection.tables.map(&:classify)
+        .map{|name| name.constantize if Object.const_defined?(name)}
+        .compact.each(&:delete_all)
       RubygemFs.mock!
     end
 
@@ -29,15 +27,15 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
       Thread.new do
         @cutter1.process
-        ActiveRecord::Base.connection.close
         latch.count_down
       end
 
       Thread.new do
         @cutter2.process
-        ActiveRecord::Base.connection.close
         latch.count_down
       end
+
+      puts Rubygem.all
 
       latch.wait
       expected_sha = Digest::SHA2.base64digest(@fs.get('gems/hola-0.0.0.gem'))
