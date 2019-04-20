@@ -75,4 +75,5 @@ module Gemcutter
   STATS_MAX_PAGES = 10
   STATS_PER_PAGE = 10
   MAX_FIELD_LENGTH = 255
+  API_SCOPES = %i(index_rubygems push_rubygem yank_rubygem add_owner remove_owner webhook_actions show_dashboard)
 end
