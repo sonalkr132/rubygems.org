@@ -71,20 +71,9 @@
     <h2><%= t '.reset_password.title' %></h2>
     <p><%= t('.reset_password.text_html', :link => link_to(t('.reset_password.link_text'), new_password_path)) %></p>
 
-    <h2><%= t '.api_access.title' %></h2>
-    <p>
-      <%= t('.api_access.key_is_html', :key => content_tag(:strong, current_user.api_key)) %>
-    </p>
-    <p>
-      <%= t('.api_access.credentials_html', :gem_credentials_file => content_tag(:code, '~/.gem/credentials'),
-                                            :gem_commands_link => link_to(t('.api_access.link_text'), page_path('gem_docs'))) %>
-    </p>
-    <pre><code>curl -u <%= current_user.name %> https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials; chmod 0600 ~/.gem/credentials</code></pre>
+    <h2><%= link_to t('.api_keys'), profile_api_keys_path %></h2>
   </div>
 <% end %>
-
-<%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
-
 
 <div class="t-body">
   <h2><%= t '.mfa.multifactor_auth' %></h2>
