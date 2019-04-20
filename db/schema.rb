@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_19_175448) do
+ActiveRecord::Schema.define(version: 2019_07_14_062823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -20,6 +20,23 @@ ActiveRecord::Schema.define(version: 2019_04_19_175448) do
     t.text "body"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "api_keys", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "hashed_key", null: false
+    t.boolean "index_rubygems", default: false, null: false
+    t.boolean "push_rubygem", default: false, null: false
+    t.boolean "yank_rubygem", default: false, null: false
+    t.boolean "add_owner", default: false, null: false
+    t.boolean "remove_owner", default: false, null: false
+    t.boolean "webhook_actions", default: false, null: false
+    t.boolean "show_dashboard", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -198,4 +215,5 @@ ActiveRecord::Schema.define(version: 2019_04_19_175448) do
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
 
+  add_foreign_key "api_keys", "users"
 end
