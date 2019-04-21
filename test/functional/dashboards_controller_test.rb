@@ -3,11 +3,12 @@ require "test_helper"
 class DashboardsControllerTest < ActionController::TestCase
   context "When not logged in" do
     setup do
-      user = create(:user)
+      key = "12345"
+      api_key = create(:api_key, key: key, show_dashboard: true)
       @subscribed_version = create(:version, created_at: 1.hour.ago)
-      create(:subscription, rubygem: @subscribed_version.rubygem, user: user)
+      create(:subscription, rubygem: @subscribed_version.rubygem, user: api_key.user)
 
-      get :show, params: { api_key: user.api_key }, format: "atom"
+      get :show, params: { api_key: key }, format: "atom"
     end
 
     context "On GET to show as an atom feed with a working api_key" do
@@ -62,7 +63,9 @@ class DashboardsControllerTest < ActionController::TestCase
           create(:version, created_at: n.hours.ago)
         end
 
-        @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+        key = "12345"
+        create(:api_key, key: key, show_dashboard: true, user: @user)
+        @request.env["HTTP_AUTHORIZATION"] = key
         get :show, format: "atom"
       end
 

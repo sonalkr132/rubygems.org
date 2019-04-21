@@ -28,11 +28,6 @@ class Rack::Attack
     req.ip if req.path =~ paths_regex && req.post?
   end
 
-  # Throttle GET request for api_key by IP address
-  throttle('api_key/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path =~ /\A#{Regexp.escape('/api/v1/api_key')}/ && req.get?
-  end
-
   # Throttle PATCH and DELETE profile requests
   throttle("clearance/remember_token", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     req.ip if req.path == "/profile" && (req.patch? || req.delete?)

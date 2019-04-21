@@ -3,8 +3,9 @@ require "test_helper"
 class Api::V1::DeletionsControllerTest < ActionController::TestCase
   context "with a confirmed user authenticated" do
     setup do
-      @user = create(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      key = "12345"
+      @user = create(:api_key, key: key, yank_rubygem: true).user
+      @request.env["HTTP_AUTHORIZATION"] = key
     end
 
     context "for a gem SomeGem with a version 0.1.0" do

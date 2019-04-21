@@ -186,8 +186,10 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "with a confirmed user authenticated" do
     setup do
-      @user = create(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      key = "12345"
+      @user = create(:api_key, key: key, push_rubygem: true, index_rubygems: true).user
+
+      @request.env["HTTP_AUTHORIZATION"] = key
     end
 
     context "On GET to index" do
