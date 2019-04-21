@@ -1,11 +1,13 @@
 class Api::V1::DeletionsController < Api::BaseController
-  before_action :authenticate_with_api_key
+  before_action :find_api_key
   before_action :find_rubygem_by_name
   before_action :validate_gem_and_version
   before_action :verify_with_otp
 
   def create
-    @deletion = @api_user.deletions.build(version: @version)
+    return render_unauthorized unless @api_key.yank_rubygem?
+
+    @deletion = @api_key.user.deletions.build(version: @version)
     if @deletion.save
       StatsD.increment "yank.success"
       enqueue_web_hook_jobs(@version)

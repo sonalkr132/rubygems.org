@@ -1,7 +1,7 @@
 class Api::V1::OwnersController < Api::BaseController
-  before_action :authenticate_with_api_key, except: %i[show gems]
+  before_action :find_api_key, only: %i[create destroy]
   before_action :find_rubygem, except: :gems
-  before_action :verify_gem_ownership, except: %i[show gems]
+  before_action :verify_gem_ownership, only: %i[create destroy]
   before_action :verify_with_otp, only: %i[create destroy]
 
   def show
@@ -12,6 +12,8 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def create
+    return render_unauthorized unless @api_key.add_owner?
+
     owner = User.find_by_name(params[:email])
     if owner
       @rubygem.ownerships.create(user: owner)
@@ -22,6 +24,8 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def destroy
+    return render_unauthorized unless @api_key.remove_owner?
+
     owner = @rubygem.owners.find_by_name(params[:email])
     if owner
       ownership = @rubygem.ownerships.find_by(user_id: owner.id)
@@ -51,7 +55,7 @@ class Api::V1::OwnersController < Api::BaseController
   protected
 
   def verify_gem_ownership
-    return if @api_user.rubygems.find_by_name(params[:rubygem_id])
-    render plain: "You do not have permission to manage this gem.", status: :unauthorized
+    return if @api_key.user.rubygems.find_by_name(params[:rubygem_id])
+    render plain: 'You do not have permission to manage this gem.', status: :unauthorized
   end
 end
