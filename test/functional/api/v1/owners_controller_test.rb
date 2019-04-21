@@ -17,7 +17,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @other_user = create(:user)
         @rubygem.ownerships.create(user: @user)
 
-        @request.env["HTTP_AUTHORIZATION"] = @user.api_key
         get :show, params: { rubygem_id: @rubygem.to_param }, format: format
       end
 
@@ -81,7 +80,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       @second_user = create(:user)
       @third_user = create(:user)
       @rubygem.ownerships.create(user: @user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      key = "12334"
+      create(:api_key, key: key, add_owner: true, user: @user)
+
+      @request.env["HTTP_AUTHORIZATION"] = key
     end
 
     context "when mfa for UI and API is enabled" do
@@ -153,7 +155,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       @second_user = create(:user)
       @rubygem.ownerships.create(user: @user)
       @ownership = @rubygem.ownerships.create(user: @second_user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+
+      key = "12223"
+      create(:api_key, key: key, remove_owner: true, user: @user)
+      @request.env["HTTP_AUTHORIZATION"] = key
     end
 
     context "when mfa for UI and API is enabled" do
@@ -222,10 +227,19 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "return plain text 404 error" do
+<<<<<<< HEAD
     @user = create(:user)
     @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     @request.accept = "*/*"
     post :create, params: { rubygem_id: "bananas" }
     assert_equal "This rubygem could not be found.", @response.body
+=======
+    key = "12223"
+    create(:api_key, key: key, add_owner: true)
+    @request.env["HTTP_AUTHORIZATION"] = key
+    @request.accept = '*/*'
+    post :create, params: { rubygem_id: 'bananas' }
+    assert_equal 'This rubygem could not be found.', @response.body
+>>>>>>> Update existing test to use api keys model
   end
 end
