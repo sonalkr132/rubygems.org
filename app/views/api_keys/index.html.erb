@@ -1,16 +1,16 @@
-<% @title = 'Api keys' %>
+<% @title = t(".api_keys") %>
 
 <div class="t-body">
   <div class="table">
     <div class="row row__header">
       <div class="cell">
-        Name
+        <%= t(".name") %>
       </div>
       <div class="cell">
-        Scope
+        <%= t(".scope") %>
       </div>
       <div class="cell">
-        Expires in
+        <%= t(".expires_in") %>
       </div>
       <div class="cell">
       </div>
@@ -22,21 +22,21 @@
           <%= api_key.name %>
         </div>
         <div class="cell">
-          <%= api_key.scope %>
+          <%= i18n_api_scopes api_key %>
         </div>
         <div class="cell">
           <%= distance_of_time_in_words Time.zone.now, api_key.expires_at.to_s %>
         </div>
         <div class="cell">
-          <%= link_to t('.delete'),
+          <%= link_to t(".delete"),
                       profile_api_key_path(id: api_key.id),
                       method: :delete,
                       class: "t-text t-link",
-                      data: { confirm: "The API key will become invalid. Are you sure?"} %>
+                      data: { confirm: t(".confirm")} %>
         </div>
       </div>
     <% end %>
   </div>
 
-  <p><%= link_to 'New API key 🡒', new_profile_api_key_path, class: "t-text t-link" %></p>
+  <p><%= link_to t(".new_key"), new_profile_api_key_path, class: "t-text t-link" %></p>
 </div>

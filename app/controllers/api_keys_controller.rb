@@ -16,8 +16,7 @@ class ApiKeysController < ApplicationController
     @api_key = current_user.api_keys.build(api_key_params.merge(hashed_key: hashed_key))
 
     if @api_key.save
-      flash[:notice] = "Please save this api key some place safe: #{@key}.\
-        We won't be able to show this to you again."
+      flash[:notice] = t(".save_key", key: @key)
       redirect_to profile_api_keys_path
     else
       flash[:error] = @api_key.errors.full_messages.to_sentence
@@ -27,7 +26,7 @@ class ApiKeysController < ApplicationController
 
   def destroy
     if @api_key.destroy
-      flash[:notice] = "Successfully deleted API key"
+      flash[:notice] = t(".success", name: @api_key.name)
     else
       flash[:error] = @api_key.errors.full_messages.to_sentence
     end
