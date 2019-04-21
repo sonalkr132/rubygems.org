@@ -47,6 +47,28 @@ zh-TW:
     errors:
       messages:
         unpwn:
+  api_keys:
+    create:
+      save_key:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scope:
+      expires_in:
+      delete:
+      confirm:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      webhook_actions:
+      show_dashboard:
+    new:
+      new_api_key:
   clearance_mailer:
     change_password:
       title:

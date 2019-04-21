@@ -55,6 +55,28 @@ en:
     errors:
       messages:
         unpwn: has previously appeared in a data breach and should not be used
+  api_keys:
+    create:
+      save_key: "Please save this key in a secret management system: %{key}. We won't be able to show the key to you again."
+    destroy:
+      success: "Successfully deleted API key: %{name}"
+    index:
+      api_keys: Api keys
+      name: Name
+      scope: Scope
+      expires_in: Expires in
+      delete: Delete
+      confirm: The API key will become invalid. Are you sure?
+      new_key: New API key 🡒
+      index_rubygems: Index rubygems
+      push_rubygem: Create rubygem
+      yank_rubygem: Delete rubygem
+      add_owner: Create owner
+      remove_owner: Delete owner
+      webhook_actions: Webhook actions
+      show_dashboard: Show dashboard
+    new:
+      new_api_key: New Api key
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD

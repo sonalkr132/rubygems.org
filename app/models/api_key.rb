@@ -3,10 +3,6 @@ class ApiKey < ApplicationRecord
   validates :user, :name, :hashed_key, :expires_at, presence: true
   before_validation :set_expires_at
 
-  def scope
-    Gemcutter::API_SCOPES.map { |s| s.to_s.tr("_", " ") if send(s) }.compact.join(", ")
-  end
-
   private
 
   def set_expires_at

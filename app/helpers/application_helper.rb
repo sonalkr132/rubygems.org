@@ -62,4 +62,8 @@ module ApplicationHelper
     return title unless title_url
     link_to title, title_url, class: "t-link--black"
   end
+
+  def i18n_api_scopes(api_key)
+    Gemcutter::API_SCOPES.map { |scope| t(".#{scope}") if api_key.send(scope) }.compact.join(", ")
+  end
 end
