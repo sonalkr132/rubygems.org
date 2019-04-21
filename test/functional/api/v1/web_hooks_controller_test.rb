@@ -51,8 +51,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
   context "When logged in" do
     setup do
       @url = "http://example.org"
-      @user = create(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      key = "12342"
+      @user = create(:api_key, key: key, webhook_actions: true).user
+
+      @request.env["HTTP_AUTHORIZATION"] = key
     end
 
     context "with the gemcutter gem" do

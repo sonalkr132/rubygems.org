@@ -1,6 +1,6 @@
-class DashboardsController < Api::BaseController
+class DashboardsController < ApplicationController
   before_action :find_api_key, unless: :signed_in?
-  before_action :redirect_to_signin, unless: -> { signed_in? || @api_key.show_dashboard? }
+  before_action :redirect_to_signin, unless: -> { signed_in? || @api_key&.show_dashboard? }
 
   def show
     respond_to do |format|
@@ -18,12 +18,13 @@ class DashboardsController < Api::BaseController
 
   private
 
-  def authenticate_with_api_key
-    api_key   = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
-    @api_user = User.find_by_api_key(api_key)
+  def find_api_key
+    params_key = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
+    hashed_key = Digest::SHA256.hexdigest(params_key)
+    @api_key   = ApiKey.find_by_hashed_key(hashed_key)
   end
 
   def api_or_logged_in_user
-    @api_key.user || current_user
+    @api_key&.user || current_user
   end
 end
