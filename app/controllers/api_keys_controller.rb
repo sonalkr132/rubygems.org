@@ -1,5 +1,6 @@
 class ApiKeysController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?
+  before_action :find_api_key, only: :destroy
 
   def index
     @api_keys = current_user.api_keys
@@ -7,12 +8,12 @@ class ApiKeysController < ApplicationController
   end
 
   def new
-    @api_key  = current_user.api_keys.build
+    @api_key = current_user.api_keys.build
   end
 
   def create
     @key = SecureRandom.hex(16)
-    @api_key = current_user.api_keys.build(api_key_params)
+    @api_key = current_user.api_keys.build(api_key_params.merge(hashed_key: hashed_key))
 
     if @api_key.save
       flash[:notice] = "Please save this api key some place safe: #{@key}.\
@@ -25,8 +26,6 @@ class ApiKeysController < ApplicationController
   end
 
   def destroy
-    @api_key = ApiKey.find(id_params)
-
     if @api_key.destroy
       flash[:notice] = "Successfully deleted API key"
     else
@@ -38,10 +37,15 @@ class ApiKeysController < ApplicationController
   private
 
   def api_key_params
-    params.require(:api_key).permit(:name, *Gemcutter::API_SCOPES).merge(hashed_key: Digest::SHA256.hexdigest(@key))
+    params.require(:api_key).permit(:name, *Gemcutter::API_SCOPES)
   end
 
-  def id_params
-    params.require("id")
+  def hashed_key
+    Digest::SHA256.hexdigest(@key)
+  end
+
+  def find_api_key
+    @api_key = current_user.api_keys.find(params.require("id"))
+    render_unauthorized unless @api_key
   end
 end

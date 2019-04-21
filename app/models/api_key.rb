@@ -4,7 +4,7 @@ class ApiKey < ApplicationRecord
   before_validation :set_expires_at
 
   def scope
-    Gemcutter::API_SCOPES.map { |s| s.to_s.gsub("_", " ") if self.send(s) }.compact.join(", ")
+    Gemcutter::API_SCOPES.map { |s| s.to_s.tr("_", " ") if send(s) }.compact.join(", ")
   end
 
   private

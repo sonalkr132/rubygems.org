@@ -1,6 +1,6 @@
-class DashboardsController < ApplicationController
-  before_action :authenticate_with_api_key, unless: :signed_in?
-  before_action :redirect_to_signin, unless: -> { signed_in? || @api_user }
+class DashboardsController < Api::BaseController
+  before_action :find_api_key, unless: :signed_in?
+  before_action :redirect_to_signin, unless: -> { signed_in? || @api_key.show_dashboard? }
 
   def show
     respond_to do |format|
@@ -24,6 +24,6 @@ class DashboardsController < ApplicationController
   end
 
   def api_or_logged_in_user
-    @api_user || current_user
+    @api_key.user || current_user
   end
 end

@@ -110,6 +110,7 @@ Rails.application.routes.draw do
     put 'api/v1/gems/unyank'
     get 'api/v1/api_key'
     put 'api/v1/api_key/reset'
+    put '/api/v1/gems/unyank'
 
     post 'gems'
     get 'gems/:id.json'
