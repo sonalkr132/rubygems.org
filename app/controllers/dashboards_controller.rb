@@ -25,6 +25,6 @@ class DashboardsController < ApplicationController
   end
 
   def api_or_logged_in_user
-    @api_key&.user || current_user
+    current_user || @api_key.user
   end
 end
