@@ -44,7 +44,6 @@ class ApiKeysController < ApplicationController
   end
 
   def find_api_key
-    @api_key = current_user.api_keys.find(params.require("id"))
-    render_unauthorized unless @api_key
+    @api_key = current_user.api_keys.find(params.require(:id))
   end
 end
