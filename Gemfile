@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.2.1'
-gem 'rails-i18n'
+gem 'rails', '~> 6.0.0.rc1'
+gem 'rails-i18n', '~> 6.0.0.beta1'
 
 gem 'autoprefixer-rails'
 gem 'aws-sdk', '~> 2.2'
