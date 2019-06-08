@@ -27,7 +27,7 @@ class DashboardsControllerTest < ActionController::TestCase
         get :show, params: { api_key: "12443" }, format: "atom"
       end
 
-      should redirect_to("the homepage") { root_path }
+      should redirect_to("the sign in page") { sign_in_path }
     end
   end
 

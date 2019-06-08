@@ -5,25 +5,25 @@ class ApiKeysControllerTest < ActionController::TestCase
     context "on GET to index" do
       setup { get :index }
 
-      should redirect_to("the homepage") { root_path }
+      should redirect_to("the sign in page") { sign_in_path }
     end
 
     context "on GET to new" do
       setup { get :new }
 
-      should redirect_to("the homepage") { root_path }
+      should redirect_to("the sign in page") { sign_in_path }
     end
 
     context "on POST to create" do
       setup { post :create, params: { api_key: { name: "test", add_owner: true } } }
 
-      should redirect_to("the homepage") { root_path }
+      should redirect_to("the sign in page") { sign_in_path }
     end
 
     context "on DELETE to destroy" do
       setup { post :create, params: { id: 1 } }
 
-      should redirect_to("the homepage") { root_path }
+      should redirect_to("the sign in page") { sign_in_path }
     end
   end
 

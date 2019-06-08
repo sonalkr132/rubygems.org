@@ -1,5 +1,5 @@
 class ApiKeysController < ApplicationController
-  before_action :redirect_to_root, unless: :signed_in?
+  before_action :redirect_to_signin, unless: :signed_in?
   before_action :find_api_key, only: :destroy
 
   def index
