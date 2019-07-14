@@ -57,6 +57,7 @@ de:
       name:
       scope:
       created_at:
+      time_ago:
       delete:
       confirm:
       new_key:
@@ -252,16 +253,8 @@ de:
       hide_email: Verberge E-Mails in öffentlichem Profil
       optional_twitter_username:
       title: Bearbeite Profil
-      api_access:
-        confirm_reset: Sind Sie sicher? Das kann nicht rückgängig gemacht werden.
-        credentials_html: 'Wenn du %{gem_commands_link} über das Terminal oder über die Kommandozeile verwenden möchtest, dann brauchst du die %{gem_credentials_file}-Datei, die du mit dem folgenden Befehl erzeugen kannst:'
-        key_is_html: Dein API-Schlüssel ist %{key}.
-        link_text: Gem-Befehle
-        reset: Zurücksetzen meines API-Schlüssels
-        title: API-Zugang
+      api_keys:
       reset_password:
-        link_text: Jetzt ein neues Passwort zuschicken lassen.
-        text_html: Brauchst du ein neues Passwort? Kein Problem. %{link}
         title: Zurücksetzen des Passworts
       delete:
         delete:

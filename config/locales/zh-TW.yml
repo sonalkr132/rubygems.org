@@ -57,6 +57,7 @@ zh-TW:
       name:
       scope:
       created_at:
+      time_ago:
       delete:
       confirm:
       new_key:
@@ -252,16 +253,8 @@ zh-TW:
       hide_email: 在公開的個人頁面中隱藏 email
       optional_twitter_username: Twitter 帳號（可選）
       title: 編輯個人檔案
-      api_access:
-        confirm_reset: 確定要重設嗎？此動作無法還原
-        credentials_html: 如果你需要從 command line 中執行 %{gem_commands_link}，你需要先準備 %{gem_credentials_file} 這個檔案，用以下的指令可以產生：
-        key_is_html: 你的 API key 是 %{key}。
-        link_text: Gem 指令
-        reset: 重設 API key
-        title: API 存取
+      api_keys:
       reset_password:
-        link_text: 從這裡設定新密碼
-        text_html: 需要重設密碼？沒問題。 %{link}
         title: 重設密碼
       delete:
         delete: 刪除
