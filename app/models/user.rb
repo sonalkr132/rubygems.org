@@ -87,6 +87,10 @@ class User < ApplicationRecord
     handle || id
   end
 
+  def reset_api_key!
+    generate_api_key && save!
+  end
+
   def all_hooks
     all     = web_hooks.specific.group_by { |hook| hook.rubygem.name }
     globals = web_hooks.global.to_a
@@ -121,6 +125,10 @@ class User < ApplicationRecord
   def set_unconfirmed_email
     self.attributes = { unconfirmed_email: email, email: email_was }
     generate_confirmation_token
+  end
+
+  def generate_api_key
+    self.api_key = SecureRandom.hex(16)
   end
 
   def total_downloads_count

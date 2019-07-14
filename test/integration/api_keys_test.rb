@@ -17,7 +17,7 @@ class ApiKeysTest < SystemTest
     check "api_key[index_rubygems]"
     click_button "Create"
 
-    assert page.has_content? "6 months"
+    assert page.has_content? "Please save this key in a secret management system"
   end
 
   test "deleting api key" do

@@ -4,8 +4,8 @@ class PushTest < ActionDispatch::IntegrationTest
   setup do
     Dir.chdir(Dir.mktmpdir)
     @key = "12345"
-    @api_key = create(:api_key, key: @key, push_rubygem: true)
-    cookies[:remember_token] = @api_key.user.remember_token
+    @user = create(:user)
+    create(:api_key, user: @user, key: @key, push_rubygem: true)
   end
 
   test "pushing a gem" do
@@ -26,7 +26,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "push a new version of a gem" do
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
-    create(:ownership, rubygem: rubygem, user: @api_key.user)
+    create(:ownership, rubygem: rubygem, user: @user)
 
     build_gem "sandworm", "2.0.0"
 

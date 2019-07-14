@@ -12,7 +12,7 @@ class ApiKeysController < ApplicationController
   end
 
   def create
-    @key = SecureRandom.hex(16)
+    @key = "rubygems_" + SecureRandom.hex(16)
     @api_key = current_user.api_keys.build(api_key_params.merge(hashed_key: hashed_key))
 
     if @api_key.save
