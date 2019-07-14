@@ -56,7 +56,7 @@ zh-TW:
       api_keys:
       name:
       scope:
-      expires_in:
+      created_at:
       delete:
       confirm:
       new_key:

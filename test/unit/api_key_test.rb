@@ -9,8 +9,4 @@ class ApiKeyTest < ActiveSupport::TestCase
   should "be valid with factory" do
     assert build(:api_key).valid?
   end
-
-  should "set expiries_at time" do
-    assert create(:api_key).expires_at > Time.zone.now
-  end
 end

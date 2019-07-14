@@ -10,7 +10,7 @@
         <%= t(".scope") %>
       </div>
       <div class="cell">
-        <%= t(".expires_in") %>
+        <%= t(".created_at") %>
       </div>
       <div class="cell">
       </div>
@@ -25,7 +25,7 @@
           <%= i18n_api_scopes api_key %>
         </div>
         <div class="cell">
-          <%= distance_of_time_in_words Time.zone.now, api_key.expires_at.to_s %>
+          <%= t(".time_ago", time: time_ago_in_words(api_key.created_at)) %>
         </div>
         <div class="cell">
           <%= link_to t(".delete"),
