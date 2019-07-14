@@ -64,7 +64,8 @@ en:
       api_keys: Api keys
       name: Name
       scope: Scope
-      expires_in: Expires in
+      created_at: Created at
+      time_ago: "%{time} ago"
       delete: Delete
       confirm: The API key will become invalid. Are you sure?
       new_key: New API key 🡒
@@ -265,13 +266,9 @@ en:
       hide_email: Hide email in public profile
       optional_twitter_username: Optional Twitter username. Will be displayed publicly
       title: Edit profile
-      api_access:
-        confirm_reset: Are you sure? This cannot be undone.
-        credentials_html: 'If you want to use %{gem_commands_link} from the command line, you''ll need a %{gem_credentials_file} file, which you can generate using the following command:'
-        key_is_html: Your API key is %{key}.
-        link_text: gem commands
-        reset: Reset my API key
-        title: API Access
+      api_keys: Api keys
+      api_keys_count: You have created %{count} API keys.
+      manage_api_keys: Manage API keys
       reset_password:
         link_text: Request a new one here.
         text_html: Need a new password? No problem. %{link}

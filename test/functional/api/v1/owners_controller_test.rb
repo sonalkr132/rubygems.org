@@ -225,7 +225,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           @ownership.destroy
           delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @user.email, format: :json }
           assert @rubygem.owners.include?(@user)
-          assert_equal 'Unable to remove owner.', @response.body
+          assert_equal "Unable to remove owner.", @response.body
         end
       end
     end
@@ -235,11 +235,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         api_key = create(:api_key, key: "12342")
         rubygem = create(:rubygem, owners: [api_key.user])
 
-      should "not remove last gem owner" do
-        @ownership.destroy
-        delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @user.email, format: :json }
-        assert @rubygem.owners.include?(@user)
-        assert_equal "Unable to remove owner.", @response.body
+        @request.env["HTTP_AUTHORIZATION"] = "12342"
+        delete :destroy, params: { rubygem_id: rubygem.to_param, email: "some@owner.com" }, format: :json
       end
 
       should respond_with :unauthorized

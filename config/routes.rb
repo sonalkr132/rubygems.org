@@ -17,6 +17,9 @@ Rails.application.routes.draw do
     end
 
     namespace :v1 do
+      resource :api_key, only: :show do
+        put :reset
+      end
       resource :multifactor_auth, only: :show
       resources :profiles, only: :show
       resources :downloads, only: :index do
@@ -108,8 +111,6 @@ Rails.application.routes.draw do
     get 'api_key'
     put 'api_key/reset'
     put 'api/v1/gems/unyank'
-    get 'api/v1/api_key'
-    put 'api/v1/api_key/reset'
     put '/api/v1/gems/unyank'
 
     post 'gems'
