@@ -66,18 +66,7 @@
   <div class="submit_field">
     <%= form.submit 'Update', :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
   </div>
-
-  <div class="t-body">
-    <h2><%= t '.reset_password.title' %></h2>
-    <p><%= t('.reset_password.text_html', :link => link_to(t('.reset_password.link_text'), new_password_path)) %></p>
-  </div>
 <% end %>
-
-<div class="t-body">
-  <h2><%= t '.api_keys' %></h2>
-  <p><%= t '.api_keys_count', count: @user.api_keys.count %></p>
-  <%= button_to t('.manage_api_keys'), profile_api_keys_path, method: 'get', class: 'form__submit' %>
-</div>
 
 <div class="t-body">
   <h2><%= t '.mfa.multifactor_auth' %></h2>
@@ -108,6 +97,14 @@
     <h2><%= link_to t('notifiers.show.title'), notifier_path %></h2>
   </div>
 <% end %>
+
+<div class="t-body">
+  <h2><%= link_to t('.reset_password.title'), new_password_path %></h2>
+</div>
+
+<div class="t-body">
+  <h2><%= link_to t('.api_keys'), profile_api_keys_path %></h2>
+</div>
 
 <div class="t-body">
   <h2><%= t '.delete.delete_profile' %></h2>

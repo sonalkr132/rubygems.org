@@ -57,6 +57,7 @@ fr:
       name:
       scope:
       created_at:
+      time_ago:
       delete:
       confirm:
       new_key:
@@ -255,16 +256,8 @@ fr:
       hide_email: Ne pas afficher l'email dans le profil public
       optional_twitter_username: Nom d'utilisateur Twitter optionnel. Sera affiché publiquement
       title: Modification de profil
-      api_access:
-        confirm_reset: Êtes-vous sûr ? Cette action ne peut être annulée.
-        credentials_html: 'Si vous voulez utiliser %{gem_commands_link} de la ligne de commande, vous aurez besoin d''un fichier %{gem_credentials_file}, que vous pouvez générer avec la commande suivante :'
-        key_is_html: Votre clé API est %{key}.
-        link_text: des commandes gems
-        reset: Remise à zéro de votre clé API
-        title: Accès API
+      api_keys:
       reset_password:
-        link_text: Demandez un nouveau mot de passe ici.
-        text_html: Besoin d'un nouveau mot de passe ? Pas de problème. %{link}
         title: Renvoi de mot de passe
       delete:
         delete: Supprimer

@@ -57,6 +57,7 @@ zh-CN:
       name:
       scope:
       created_at:
+      time_ago:
       delete:
       confirm:
       new_key:
@@ -255,16 +256,8 @@ zh-CN:
       hide_email: 在公开的个人资料里面隐藏我的 Email
       optional_twitter_username: Twitter 账号（可选）
       title: 修改个人资料
-      api_access:
-        confirm_reset: 确定要重置吗？此动作执行后将无法撤销
-        credentials_html: 如果你希望在命令行中使用 %{gem_commands_link}，你需要一个 %{gem_credentials_file} 文件，可用下面的命令生成：
-        key_is_html: 你的 API Key：%{key}。
-        link_text: Gem 命令
-        reset: 重置 API Key
-        title: API 访问
+      api_keys:
       reset_password:
-        link_text: 这里找回密码
-        text_html: 需要一个新密码？没问题，访问 %{link}
         title: 重置密码
       delete:
         delete: 删除

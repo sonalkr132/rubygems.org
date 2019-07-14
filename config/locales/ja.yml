@@ -57,6 +57,7 @@ ja:
       name:
       scope:
       created_at:
+      time_ago:
       delete:
       confirm:
       new_key:
@@ -255,16 +256,8 @@ ja:
       hide_email: メールアドレスを公開しない
       optional_twitter_username: Twitterのユーザー名(任意,公開)
       title: プロフィールを編集する
-      api_access:
-        confirm_reset: この操作は取り消せませんが、本当によろしいですか?
-        credentials_html: 'もしコマンドラインから%{gem_commands_link}を使いたい場合、%{gem_credentials_file}ファイルが必要になります。このファイルは以下のコマンドで再生成することができます:'
-        key_is_html: あなたのAPIキーは%{key}です。
-        link_text: Gemコマンド
-        reset: APIキーをリセットする
-        title: APIアクセス
+      api_keys:
       reset_password:
-        link_text: ここから新規に発行することができます。
-        text_html: 新しいパスワードが必要ですか? %{link}
         title: パスワードのリセット
       delete:
         delete: アカウント削除

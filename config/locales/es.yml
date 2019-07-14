@@ -65,6 +65,7 @@ es:
       name:
       scope:
       created_at:
+      time_ago:
       delete:
       confirm:
       new_key:
@@ -265,16 +266,8 @@ es:
       hide_email: Ocultar correo electrónico en perfil público
       optional_twitter_username: Usuario de Twitter opcional. Será mostrado en tu perfil público
       title: Editar perfil
-      api_access:
-        confirm_reset: '¿Seguro? Este cambio no puede deshacerse.'
-        credentials_html: 'Si quieres usar %{gem_commands_link} desde la línea de comandos, vas a necesitar un archivo llamado %{gem_credentials_file}, el cual puedes generar usando el siguiente comando:'
-        key_is_html: Tu clave de API es %{key}.
-        link_text: Comandos de la gema
-        reset: Reestablecer mi clave de API
-        title: Acceso por API
+      api_keys:
       reset_password:
-        link_text: Solicitar aquí una nueva.
-        text_html: '¿Necesitas una nueva contraseña? Sin problemas. %{link}'
         title: Reestablecer contraseña
       delete:
         delete: Eliminar

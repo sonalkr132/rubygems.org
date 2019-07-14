@@ -57,6 +57,7 @@ pt-BR:
       name:
       scope:
       created_at:
+      time_ago:
       delete:
       confirm:
       new_key:
@@ -255,16 +256,8 @@ pt-BR:
       hide_email: Não mostrar meu email
       optional_twitter_username:
       title: Editar Perfil
-      api_access:
-        confirm_reset: Tem certeza?
-        credentials_html: 'Se você quiser usar %{gem_commands_link} pela linha comando, você vai precisar de um arquivo %{gem_credentials_file}. Para gerar este arquivo rode o seguinte comando:'
-        key_is_html: A chave da sua API é %{key}.
-        link_text: gems
-        reset: Resetar minha chave da API
-        title: Acesso à API
+      api_keys:
       reset_password:
-        link_text: Solicitar uma nova senha.
-        text_html: Esqueceu sua senha? Sem problema. %{link}
         title: Resetar senha
       delete:
         delete:

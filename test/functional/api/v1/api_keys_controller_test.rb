@@ -4,9 +4,6 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   should "route new paths to new controller" do
     route = { controller: "api/v1/api_keys", action: "show" }
     assert_recognizes(route, "/api/v1/api_key")
-
-    route = { controller: "api/v1/api_keys", action: "reset" }
-    assert_recognizes(route, path: "/api/v1/api_key/reset", method: :put)
   end
 
   context "on GET to show with no credentials" do
@@ -121,31 +118,6 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     should_respond_to(:yaml, :to_sym) do |body|
       YAML.safe_load(body, [Symbol])
-    end
-  end
-
-  context "on PUT to reset with signed in user" do
-    setup do
-      @user = create(:user)
-      sign_in_as(@user)
-    end
-    should "reset the user's api key" do
-      assert_changed(@user, :api_key) do
-        put :reset
-      end
-    end
-    should "redirect to the edit profile page" do
-      put :reset
-      assert_redirected_to edit_profile_path
-    end
-  end
-
-  context "on PUT to reset with no signed in user" do
-    setup do
-      put :reset
-    end
-    should "redirect" do
-      assert_response :redirect
     end
   end
 end
