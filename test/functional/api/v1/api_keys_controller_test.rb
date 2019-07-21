@@ -76,6 +76,42 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         refute @controller.request.env[:clearance].signed_in?
       end
     end
+
+    context "on POST to create without OTP" do
+      setup do
+        post :create
+      end
+
+      should "deny access" do
+        assert_response 401
+        assert_match I18n.t("otp_missing"), @response.body
+      end
+    end
+
+    context "on POST to create with incorrect OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = "11111"
+        post :create
+      end
+
+      should "deny access" do
+        assert_response 401
+        assert_match I18n.t("otp_incorrect"), @response.body
+      end
+    end
+
+    context "on POST to create with correct OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        post :create, params: { api_key: { name: "test", index_rubygems: "true" } }
+      end
+
+      should respond_with :success
+      should "return API key" do
+        hashed_key = @user.api_keys.first.hashed_key
+        assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
+      end
+    end
   end
 
   # this endpoint is used by rubygems
@@ -118,6 +154,30 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     should_respond_to(:yaml, :to_sym) do |body|
       YAML.safe_load(body, [Symbol])
+    end
+  end
+
+  context "on POST to create with bad credentials" do
+    setup do
+      authorize_with("bad:creds")
+      post :create
+    end
+    should "deny access" do
+      assert_response 401
+      assert_match "HTTP Basic: Access denied.", @response.body
+    end
+  end
+
+  context "on POST to create with correct credentials" do
+    setup do
+      @user = create(:user)
+      authorize_with("#{@user.email}:#{@user.password}")
+      post :create, params: { api_key: { name: "test", index_rubygems: "true" } }, format: "text"
+    end
+    should respond_with :success
+    should "return API key" do
+      hashed_key = @user.api_keys.first.hashed_key
+      assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
     end
   end
 end
