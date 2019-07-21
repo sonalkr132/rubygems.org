@@ -68,7 +68,7 @@ en:
       time_ago: "%{time} ago"
       delete: Delete
       confirm: The API key will become invalid. Are you sure?
-      new_key: New API key 🡒
+      new_key: New API key
       index_rubygems: Index rubygems
       push_rubygem: Create rubygem
       yank_rubygem: Delete rubygem
