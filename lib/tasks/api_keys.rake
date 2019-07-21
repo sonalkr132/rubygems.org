@@ -11,11 +11,7 @@ namespace :api_keys do
       scopes_hash = Gemcutter::API_SCOPES.each_with_object({}) { |k, h| h[k] = true }
 
       api_key = user.api_keys.create(scopes_hash.merge(hashed_key: hashed_key, name: "legacy-key"))
-      if api_key.persisted?
-        user.update(api_key: nil)
-      else
-        puts "Count not create new api key: #{api_key.errors.full_messages}"
-      end
+      puts "Count not create new api key: #{api_key.errors.full_messages}, user: #{user.handler}" unless api_key.persisted?
 
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
