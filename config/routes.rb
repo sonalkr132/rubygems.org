@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v1 do
-      resource :api_key, only: :show
+      resource :api_key, only: %i[show create]
       resource :multifactor_auth, only: :show
       resources :profiles, only: :show
       resources :downloads, only: :index do
