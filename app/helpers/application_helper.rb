@@ -64,6 +64,6 @@ module ApplicationHelper
   end
 
   def i18n_api_scopes(api_key)
-    Gemcutter::API_SCOPES.map { |scope| t(".#{scope}") if api_key.send(scope) }.compact.join(", ")
+    api_key.scope.each { |scope| t(".#{scope}") }.join(", ")
   end
 end

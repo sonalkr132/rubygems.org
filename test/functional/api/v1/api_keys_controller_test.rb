@@ -173,11 +173,19 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       @user = create(:user)
       authorize_with("#{@user.email}:#{@user.password}")
       post :create, params: { api_key: { name: "test", index_rubygems: "true" } }, format: "text"
+      Delayed::Worker.new.work_off
     end
     should respond_with :success
     should "return API key" do
       hashed_key = @user.api_keys.first.hashed_key
       assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
+    end
+    should "deliver api key created email" do
+      refute ActionMailer::Base.deliveries.empty?
+      email = ActionMailer::Base.deliveries.last
+      assert_equal [@user.email], email.to
+      assert_equal ["no-reply@mailer.rubygems.org"], email.from
+      assert_equal "New API key created for rubygems.org", email.subject
     end
   end
 end

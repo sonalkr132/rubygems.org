@@ -9,4 +9,14 @@ class ApiKeyTest < ActiveSupport::TestCase
   should "be valid with factory" do
     assert build(:api_key).valid?
   end
+
+  context "#scope" do
+    setup do
+      @api_key = create(:api_key, index_rubygems: true, push_rubygem: true)
+    end
+
+    should "something" do
+      assert_equal %i[index_rubygems push_rubygem], @api_key.scope
+    end
+  end
 end

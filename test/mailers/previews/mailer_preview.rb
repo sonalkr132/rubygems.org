@@ -46,4 +46,9 @@ class MailerPreview < ActionMailer::Preview
     user = User.last
     Mailer.reset_api_key(user)
   end
+
+  def api_key_created
+    api_key = ApiKey.last
+    Mailer.api_key_created(api_key.id)
+  end
 end
