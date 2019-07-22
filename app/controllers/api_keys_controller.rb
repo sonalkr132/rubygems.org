@@ -16,6 +16,8 @@ class ApiKeysController < ApplicationController
     @api_key = current_user.api_keys.build(api_key_params.merge(hashed_key: hashed_key(key)))
 
     if @api_key.save
+      Mailer.delay.api_key_created(@api_key.id)
+
       flash[:notice] = t(".save_key", key: key)
       redirect_to profile_api_keys_path
     else

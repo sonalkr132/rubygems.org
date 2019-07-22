@@ -68,7 +68,10 @@ class ApiKeysControllerTest < ActionController::TestCase
 
     context "on POST to create" do
       context "with successful save" do
-        setup { post :create, params: { api_key: { name: "test", add_owner: true } } }
+        setup do
+          post :create, params: { api_key: { name: "test", add_owner: true } }
+          Delayed::Worker.new.work_off
+        end
 
         should redirect_to("the key index page") { profile_api_keys_path }
         should "create new key for user" do
@@ -76,6 +79,13 @@ class ApiKeysControllerTest < ActionController::TestCase
 
           assert_equal "test", api_key.name
           assert api_key.add_owner?
+        end
+        should "deliver api key created email" do
+          refute ActionMailer::Base.deliveries.empty?
+          email = ActionMailer::Base.deliveries.last
+          assert_equal [@user.email], email.to
+          assert_equal ["no-reply@mailer.rubygems.org"], email.from
+          assert_equal "New API key created for rubygems.org", email.subject
         end
       end
 

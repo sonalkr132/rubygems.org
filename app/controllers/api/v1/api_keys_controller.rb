@@ -17,6 +17,7 @@ class Api::V1::ApiKeysController < Api::BaseController
         api_key = user.api_keys.build(api_key_params.merge(hashed_key: hashed_key(key)))
 
         if api_key.save
+          Mailer.delay.api_key_created(api_key.id)
           respond_with key
         else
           respond_with api_key.errors.full_messages.to_sentence
