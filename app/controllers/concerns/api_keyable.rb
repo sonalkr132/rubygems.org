@@ -4,7 +4,7 @@ module ApiKeyable
   private
 
   def api_key_params
-    params.require(:api_key).permit(:name, *Gemcutter::API_SCOPES)
+    params.require(:api_key).permit(:name, *ApiKey::API_SCOPES)
   end
 
   def hashed_key(key)

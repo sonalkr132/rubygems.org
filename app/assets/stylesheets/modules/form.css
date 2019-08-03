@@ -214,3 +214,7 @@
 .form__checkbox__item {
   height: 35px;
 }
+
+.form__checkbox__item .field_with_errors {
+  display: contents;
+}
