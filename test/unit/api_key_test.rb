@@ -19,4 +19,14 @@ class ApiKeyTest < ActiveSupport::TestCase
       assert_equal %i[index_rubygems push_rubygem], @api_key.scope
     end
   end
+
+  context "show dashboard scope" do
+    should "be valid when enabled exclusively" do
+      assert build(:api_key, show_dashboard: true).valid?
+    end
+
+    should "be invalid when enabled with any other scope" do
+      refute build(:api_key, show_dashboard: true, push_rubygem: true).valid?
+    end
+  end
 end

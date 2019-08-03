@@ -6,7 +6,7 @@
     <%= f.text_field :name, class: "form__input", autocomplete: :off %>
 
     <%= label_tag :scope, t("api_keys.index.scope"), class: "form__label" %>
-    <% Gemcutter::API_SCOPES.each do |api_scope| %>
+    <% ApiKey::API_SCOPES.each do |api_scope| %>
       <div class = "form__checkbox__item">
         <%= f.check_box "#{api_scope}", { class: "form__checkbox__input" } , "true", "false" %>
         <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
