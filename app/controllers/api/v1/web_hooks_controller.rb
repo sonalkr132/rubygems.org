@@ -1,5 +1,5 @@
 class Api::V1::WebHooksController < Api::BaseController
-  before_action :find_api_key
+  before_action :authenticate_with_api_key
   before_action :verify_authorization
   before_action :find_rubygem_by_name, :set_url, except: :index
 

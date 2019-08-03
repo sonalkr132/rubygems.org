@@ -13,14 +13,14 @@ class Api::V1::ApiKeysController < Api::BaseController
       user = User.authenticate(username, password)
 
       check_mfa(user) do
-        key = rubygems_key
+        key = generate_unique_rubygems_key
         api_key = user.api_keys.build(api_key_params.merge(hashed_key: hashed_key(key)))
 
         if api_key.save
           Mailer.delay.api_key_created(api_key.id)
           respond_with key
         else
-          respond_with api_key.errors.full_messages.to_sentence
+          respond_with api_key.errors.full_messages.to_sentence, status: :unprocessable_entity
         end
       end
     end
@@ -39,11 +39,11 @@ class Api::V1::ApiKeysController < Api::BaseController
     end
   end
 
-  def respond_with(msg)
+  def respond_with(msg, status: :ok)
     respond_to do |format|
-      format.any(:all) { render plain: msg }
-      format.json { render json: { rubygems_api_key: msg } }
-      format.yaml { render plain: { rubygems_api_key: msg }.to_yaml }
+      format.any(:all) { render plain: msg, status: status }
+      format.json { render json: { rubygems_api_key: msg, status: status } }
+      format.yaml { render plain: { rubygems_api_key: msg, status: status }.to_yaml }
     end
   end
 

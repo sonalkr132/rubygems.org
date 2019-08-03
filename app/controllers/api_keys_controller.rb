@@ -12,7 +12,7 @@ class ApiKeysController < ApplicationController
   end
 
   def create
-    key = rubygems_key
+    key = generate_unique_rubygems_key
     @api_key = current_user.api_keys.build(api_key_params.merge(hashed_key: hashed_key(key)))
 
     if @api_key.save

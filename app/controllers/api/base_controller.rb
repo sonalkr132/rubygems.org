@@ -29,7 +29,7 @@ class Api::BaseController < ApplicationController
     render plain: prompt_text, status: :unauthorized
   end
 
-  def find_api_key
+  def authenticate_with_api_key
     params_key = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
     hashed_key = Digest::SHA256.hexdigest(params_key)
     @api_key   = ApiKey.find_by_hashed_key(hashed_key)
