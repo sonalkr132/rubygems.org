@@ -62,7 +62,7 @@ class ApiKeysControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "render api key of user" do
-        assert page.has_content? "New Api key"
+        assert page.has_content? "New API key"
       end
     end
 

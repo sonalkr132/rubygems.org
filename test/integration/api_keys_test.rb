@@ -26,6 +26,6 @@ class ApiKeysTest < SystemTest
     visit profile_api_keys_path
     click_link "Delete"
 
-    assert page.has_content? "New Api key"
+    assert page.has_content? "New API key"
   end
 end
