@@ -47,16 +47,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :success
     end
 
-    should "allow api_key show" do
-      stay_under_limit_for("api_key/ip")
-
-      get "/api/v1/api_key.json",
-        env: { "HTTP_AUTHORIZATION" => encode(@user.handle, @user.password) },
-        headers: { REMOTE_ADDR: @ip_address }
-
-      assert_response :success
-    end
-
     should "allow email confirmation resend" do
       stay_under_limit_for("clearance/ip/1")
       stay_under_email_limit_for("email_confirmations/email")
@@ -72,6 +62,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
         @rubygem.ownerships.create(user: @user)
+        create(:api_key, key: "12334", push_rubygem: true, user: @user)
       end
 
       should "allow gem push by ip" do
@@ -79,7 +70,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
-          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
 
         assert_response :success
       end
@@ -108,9 +99,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             under_backoff_limit.times { Rack::Attack.cache.count(@push_exp_throttle_level_key, exp_base_limit_period**level) }
           end
 
+          create(:api_key, key: "12334", push_rubygem: true, user: @user)
           post "/api/v1/gems",
             params: gem_file("test-0.0.0.gem").read,
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
         end
 
         should "reset gem push rate limit rack attack key" do
@@ -128,7 +120,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         should "not rate limit successive requests" do
           post "/api/v1/gems",
             params: gem_file("test-1.0.0.gem").read,
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
 
           assert_response :ok
         end
@@ -165,6 +157,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
           stay_under_exponential_limit("api/ip")
 
+          create(:api_key, key: "12334", add_owner: true, yank_rubygem: true, remove_owner: true, user: @user)
           @rubygem = create(:rubygem, name: "test", number: "0.0.1")
           @rubygem.ownerships.create(user: @user)
         end
@@ -172,7 +165,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         should "allow gem yank by ip" do
           delete "/api/v1/gems/yank",
             params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
 
           assert_response :success
         end
@@ -182,7 +175,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
           post "/api/v1/gems/#{@rubygem.name}/owners",
             params: { rubygem_id: @rubygem.to_param, email: second_user.email },
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
 
           assert_response :success
         end
@@ -193,7 +186,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
           delete "/api/v1/gems/#{@rubygem.name}/owners",
             params: { rubygem_id: @rubygem.to_param, email: second_user.email },
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", HTTP_OTP: ROTP::TOTP.new(@user.mfa_seed).now }
 
           assert_response :success
         end
@@ -298,10 +291,11 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       should "throttle gem push by ip" do
         exceed_push_limit_for("api/push/ip")
+        create(:api_key, key: "12334", push_rubygem: true, user: @user)
 
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
-          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
 
         assert_response :too_many_requests
       end
