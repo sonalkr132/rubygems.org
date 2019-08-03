@@ -1,8 +1,8 @@
 class Api::V1::OwnersController < Api::BaseController
-  before_action :find_api_key, only: %i[create destroy]
+  before_action :authenticate_with_api_key, except: %i[show gems]
   before_action :find_rubygem, except: :gems
-  before_action :verify_gem_ownership, only: %i[create destroy]
-  before_action :verify_with_otp, only: %i[create destroy]
+  before_action :verify_gem_ownership, except: %i[show gems]
+  before_action :verify_with_otp, except: %i[show gems]
 
   def show
     respond_to do |format|
