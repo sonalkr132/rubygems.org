@@ -61,7 +61,7 @@ en:
     destroy:
       success: "Successfully deleted API key: %{name}"
     index:
-      api_keys: Api keys
+      api_keys: API keys
       name: Name
       scope: Scope
       created_at: Created at
@@ -77,7 +77,7 @@ en:
       webhook_actions: Webhook actions
       show_dashboard: Show dashboard
     new:
-      new_api_key: New Api key
+      new_api_key: New API key
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD
@@ -266,7 +266,7 @@ en:
       hide_email: Hide email in public profile
       optional_twitter_username: Optional Twitter username. Will be displayed publicly
       title: Edit profile
-      api_keys: Api keys
+      api_keys: API keys
       reset_password:
         title: Reset password
       delete:
