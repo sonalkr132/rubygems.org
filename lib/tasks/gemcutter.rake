@@ -114,3 +114,16 @@ namespace :gemcutter do
     end
   end
 end
+
+namespace :custom do
+  task :migrate do
+    Rake::Task["db:migrate"].invoke
+    puts `ps -ef | grep postgres`
+  end
+
+  task :prepare do
+    puts '*'*100
+    puts `ps -ef | grep postgres`
+    Rake::Task["db:test:prepare"].invoke
+  end
+end
