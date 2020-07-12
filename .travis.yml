@@ -41,7 +41,7 @@ before_script:
   - bundle exec rake db:setup
 
 script:
-  - bundle exec rails test
+  - bundle exec rails test --seed 27888
   - bundle exec rake rubocop
   - bundle exec brakeman
   - script/build_docker.sh

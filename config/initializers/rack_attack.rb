@@ -76,11 +76,11 @@ class Rack::Attack
 
   protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
 
-  EXP_BACKOFF_LEVELS.each do |level|
-    throttle("#{PUSH_EXP_THROTTLE_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_push_action, req.path, req.request_method)
-    end
-  end
+  # EXP_BACKOFF_LEVELS.each do |level|
+  #   throttle("#{PUSH_EXP_THROTTLE_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
+  #     req.ip if protected_route?(protected_push_action, req.path, req.request_method)
+  #   end
+  # end
 
   throttle("api/push/ip", limit: PUSH_LIMIT, period: PUSH_LIMIT_PERIOD) do |req|
     req.ip if protected_route?(protected_push_action, req.path, req.request_method)
@@ -182,4 +182,83 @@ class Rack::Attack
   end
 
   self.throttled_response_retry_after_header = true
+end
+
+
+module Rack
+  class Attack::Throttle
+    MANDATORY_OPTIONS = [:limit, :period].freeze
+
+    attr_reader :name, :limit, :period, :block, :type
+
+    def initialize(name, options, &block)
+      @name = name
+      @block = block
+      MANDATORY_OPTIONS.each do |opt|
+        raise ArgumentError, "Must pass #{opt.inspect} option" unless options[opt]
+      end
+      @limit = options[:limit]
+      @period = options[:period].respond_to?(:call) ? options[:period] : options[:period].to_i
+      @type   = options.fetch(:type, :throttle)
+    end
+
+    def cache
+      Rack::Attack.cache
+    end
+
+    def matched_by?(request)
+      discriminator = discriminator_for(request)
+      return false unless discriminator
+
+      current_period  = period_for(request)
+      current_limit   = limit_for(request)
+      count           = cache.count("#{name}:#{discriminator}", current_period)
+
+      puts '*'*100
+      puts "#{name}:#{discriminator}"
+      puts count
+
+      data = {
+        discriminator: discriminator,
+        count: count,
+        period: current_period,
+        limit: current_limit,
+        epoch_time: cache.last_epoch_time
+      }
+
+      (count > current_limit).tap do |throttled|
+        annotate_request_with_throttle_data(request, data)
+        if throttled
+          annotate_request_with_matched_data(request, data)
+          Rack::Attack.instrument(request)
+        end
+      end
+    end
+
+    private
+
+      def discriminator_for(request)
+        discriminator = block.call(request)
+        discriminator
+      end
+
+      def period_for(request)
+        period.respond_to?(:call) ? period.call(request) : period
+      end
+
+      def limit_for(request)
+        limit.respond_to?(:call) ? limit.call(request) : limit
+      end
+
+      def annotate_request_with_throttle_data(request, data)
+        (request.env['rack.attack.throttle_data'] ||= {})[name] = data
+      end
+
+      def annotate_request_with_matched_data(request, data)
+        request.env['rack.attack.matched']             = name
+        request.env['rack.attack.match_discriminator'] = data[:discriminator]
+        request.env['rack.attack.match_type']          = type
+        request.env['rack.attack.match_data']          = data
+      end
+  end
 end

@@ -27,6 +27,7 @@ class ActiveSupport::TestCase
   setup do
     I18n.locale = :en
     Rails.cache.clear
+    Rack::Attack.cache.store.clear
 
     # Don't connect to the Pwned Passwords API in tests
     Pwned.stubs(:pwned?).returns(false)
@@ -60,7 +61,10 @@ class ActiveSupport::TestCase
 end
 
 class ActionDispatch::IntegrationTest
-  setup { host! Gemcutter::HOST }
+  setup do
+    host! Gemcutter::HOST
+    Rails.cache.clear
+  end
 end
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
