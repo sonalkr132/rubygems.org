@@ -3,10 +3,6 @@ module ApiKeyable
 
   private
 
-  def api_key_params
-    params.require(:api_key).permit(:name, *ApiKey::API_SCOPES)
-  end
-
   def hashed_key(key)
     Digest::SHA256.hexdigest(key)
   end
@@ -19,6 +15,6 @@ module ApiKeyable
   end
 
   def generate_rubygems_key
-    "rubygems_" + SecureRandom.hex(16)
+    "rubygems_" + SecureRandom.hex(24)
   end
 end

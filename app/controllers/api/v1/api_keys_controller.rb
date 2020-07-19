@@ -50,4 +50,8 @@ class Api::V1::ApiKeysController < Api::BaseController
   def otp
     request.headers["HTTP_OTP"]
   end
+
+  def api_key_params
+    params.permit(:name, *ApiKey::API_SCOPES)
+  end
 end

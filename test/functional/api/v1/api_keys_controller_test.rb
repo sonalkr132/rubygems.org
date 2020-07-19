@@ -103,7 +103,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     context "on POST to create with correct OTP" do
       setup do
         @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-        post :create, params: { api_key: { name: "test", index_rubygems: "true" } }
+        post :create, params: { name: "test", index_rubygems: "true" }
       end
 
       should respond_with :success
@@ -172,7 +172,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       authorize_with("#{@user.email}:#{@user.password}")
-      post :create, params: { api_key: { name: "test", index_rubygems: "true" } }, format: "text"
+      post :create, params: { name: "test", index_rubygems: "true" }, format: "text"
       Delayed::Worker.new.work_off
     end
     should respond_with :success

@@ -36,4 +36,10 @@ class ApiKeysController < ApplicationController
     end
     redirect_to profile_api_keys_path
   end
+
+  private
+
+  def api_key_params
+    params.require(:api_key).permit(:name, *ApiKey::API_SCOPES)
+  end
 end
