@@ -8,10 +8,10 @@ namespace :api_keys do
     puts "Total: #{total}"
     users.find_each do |user|
       hashed_key = Digest::SHA256.hexdigest(user.api_key)
-      scopes_hash = ApiKey::API_SCOPES.index_with { true }
+      scopes_hash = ApiKey::API_SCOPES.each_with_object({}) { |k, h| h[k] = true unless k == :show_dashboard }
 
       api_key = user.api_keys.new(scopes_hash.merge(hashed_key: hashed_key, name: "legacy-key"))
-      api_key.save(validate: false)
+      api_key.save
       puts "Count not create new api key: #{api_key.errors.full_messages}, user: #{user.handle}" unless api_key.persisted?
 
       i += 1
