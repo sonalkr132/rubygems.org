@@ -66,12 +66,24 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       setup do
         @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
         get :show
+        Delayed::Worker.new.work_off
       end
 
       should respond_with :success
       should "return API key" do
-        assert_equal @user.api_key, @response.body
+        hashed_key = @user.api_keys.first.hashed_key
+        assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
       end
+
+      should "deliver api key created email" do
+        refute ActionMailer::Base.deliveries.empty?
+        email = ActionMailer::Base.deliveries.last
+        assert_equal [@user.email], email.to
+        assert_equal ["no-reply@mailer.rubygems.org"], email.from
+        assert_equal "New API key created for rubygems.org", email.subject
+        assert_match "legacy-key", email.body.to_s
+      end
+
       should "not sign in user" do
         refute @controller.request.env[:clearance].signed_in?
       end
@@ -123,7 +135,8 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
     should respond_with :success
     should "return API key" do
-      assert_equal @user.api_key, @response.body
+      hashed_key = @user.api_keys.first.hashed_key
+      assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
     end
     should "not sign in user" do
       refute @controller.request.env[:clearance].signed_in?
@@ -142,7 +155,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         response = yield(@response.body)
         assert_not_nil response
         assert_kind_of Hash, response
-        assert_equal @user.api_key, response["rubygems_api_key".send(to_meth)]
+
+        hashed_key = @user.api_keys.first.hashed_key
+        assert_equal hashed_key, Digest::SHA256.hexdigest(response["rubygems_api_key".send(to_meth)])
       end
     end
   end
@@ -172,7 +187,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       authorize_with("#{@user.email}:#{@user.password}")
-      post :create, params: { name: "test", index_rubygems: "true" }, format: "text"
+      post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
       Delayed::Worker.new.work_off
     end
     should respond_with :success
@@ -186,6 +201,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       assert_equal [@user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "New API key created for rubygems.org", email.subject
+      assert_match "test-key", email.body.to_s
     end
   end
 end

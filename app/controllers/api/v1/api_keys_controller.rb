@@ -4,7 +4,12 @@ class Api::V1::ApiKeysController < Api::BaseController
   def show
     authenticate_or_request_with_http_basic do |username, password|
       user = User.authenticate(username, password)
-      check_mfa(user) { respond_with user.api_key }
+      check_mfa(user) do
+        key = generate_unique_rubygems_key
+        api_key = user.api_keys.build(legacy_key_defaults.merge(hashed_key: hashed_key(key)))
+
+        save_and_respond(api_key, key)
+      end
     end
   end
 
@@ -16,12 +21,7 @@ class Api::V1::ApiKeysController < Api::BaseController
         key = generate_unique_rubygems_key
         api_key = user.api_keys.build(api_key_params.merge(hashed_key: hashed_key(key)))
 
-        if api_key.save
-          Mailer.delay.api_key_created(api_key.id)
-          respond_with key
-        else
-          respond_with api_key.errors.full_messages.to_sentence, status: :unprocessable_entity
-        end
+        save_and_respond(api_key, key)
       end
     end
   end
@@ -36,6 +36,15 @@ class Api::V1::ApiKeysController < Api::BaseController
       render plain: prompt_text, status: :unauthorized
     else
       false
+    end
+  end
+
+  def save_and_respond(api_key, key)
+    if api_key.save
+      Mailer.delay.api_key_created(api_key.id)
+      respond_with key
+    else
+      respond_with api_key.errors.full_messages.to_sentence, status: :unprocessable_entity
     end
   end
 
