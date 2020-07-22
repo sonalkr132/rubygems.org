@@ -37,6 +37,15 @@ class ApiKeysController < ApplicationController
     redirect_to profile_api_keys_path
   end
 
+  def reset
+    if current_user.api_keys.destroy_all
+      flash[:notice] = t(".success")
+    else
+      flash[:error] = t("try_again")
+    end
+    redirect_to profile_api_keys_path
+  end
+
   private
 
   def api_key_params

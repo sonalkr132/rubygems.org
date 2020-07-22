@@ -25,6 +25,12 @@ class ApiKeysControllerTest < ActionController::TestCase
 
       should redirect_to("the sign in page") { sign_in_path }
     end
+
+    context "on DELETE to destroy" do
+      setup { delete :reset }
+
+      should redirect_to("the sign in page") { sign_in_path }
+    end
   end
 
   context "when logged in" do
@@ -138,6 +144,20 @@ class ApiKeysControllerTest < ActionController::TestCase
         should "not delete the api key" do
           assert ApiKey.find(@api_key.id)
         end
+      end
+    end
+
+    context "on DELETE to reset" do
+      setup do
+        create(:api_key, key: "1234", user: @user)
+        create(:api_key, key: "2345", user: @user)
+
+        delete :reset
+      end
+
+      should redirect_to("the index api key page") { profile_api_keys_path }
+      should "delete all api key of user" do
+        assert @user.api_keys.empty?
       end
     end
   end

@@ -68,6 +68,7 @@ es:
       time_ago:
       delete:
       confirm:
+      confirm_all:
       new_key:
       index_rubygems:
       push_rubygem:
@@ -76,8 +77,11 @@ es:
       remove_owner:
       webhook_actions:
       show_dashboard:
+      reset:
     new:
       new_api_key:
+    reset:
+      success:
   clearance_mailer:
     change_password:
       title: CAMBIAR CONTRASEÑA

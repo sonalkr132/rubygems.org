@@ -28,4 +28,13 @@ class ApiKeysTest < SystemTest
 
     assert page.has_content? "New API key"
   end
+
+  test "deleting all api key" do
+    create(:api_key, user: @user)
+
+    visit profile_api_keys_path
+    click_link "Delete all"
+
+    assert page.has_content? "New API key"
+  end
 end

@@ -138,7 +138,9 @@ Rails.application.routes.draw do
         delete :destroy, as: :destroy
       end
 
-      resources :api_keys, only: %i[new create index destroy]
+      resources :api_keys, only: %i[new create index destroy] do
+        delete :reset, on: :collection
+      end
     end
     resources :stats, only: :index
     get "/news" => 'news#show', as: 'legacy_news_path'

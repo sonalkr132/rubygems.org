@@ -106,6 +106,10 @@ a.t-list__item {
   font-style: normal;
   content: "→"; }
 
+.t-link--bold {
+  font-weight: 600;
+}
+
 .t-body p, .t-body ol li, .t-body ul li {
   font-weight: 300;
   font-size: 18px;

@@ -57,7 +57,7 @@ en:
         unpwn: has previously appeared in a data breach and should not be used
   api_keys:
     create:
-      save_key: "Please save this key in a secret management system: %{key}. We won't be able to show the key to you again."
+      save_key: "Please save this key in a secret management system: <b class='t-text'>%{key}</b>. We won't be able to show the key to you again."
     destroy:
       success: "Successfully deleted API key: %{name}"
     index:
@@ -68,6 +68,7 @@ en:
       time_ago: "%{time} ago"
       delete: Delete
       confirm: The API key will become invalid. Are you sure?
+      confirm_all: All API keys will become invalid. Are you sure?
       new_key: New API key
       index_rubygems: Index rubygems
       push_rubygem: Create rubygem
@@ -76,8 +77,11 @@ en:
       remove_owner: Delete owner
       webhook_actions: Webhook actions
       show_dashboard: Show dashboard
+      reset: Delete all
     new:
       new_api_key: New API key
+    reset:
+      success: "Deleted all API keys"
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD
