@@ -57,7 +57,7 @@ en:
         unpwn: has previously appeared in a data breach and should not be used
   api_keys:
     create:
-      save_key: "Please save this key in a secret management system: <b class='t-text'>%{key}</b>. We won't be able to show the key to you again."
+      success: "Created new API key"
     destroy:
       success: "Successfully deleted API key: %{name}"
     index:
@@ -65,7 +65,6 @@ en:
       name: Name
       scope: Scope
       created_at: Created at
-      time_ago: "%{time} ago"
       delete: Delete
       confirm: The API key will become invalid. Are you sure?
       confirm_all: All API keys will become invalid. Are you sure?
@@ -78,6 +77,7 @@ en:
       webhook_actions: Webhook actions
       show_dashboard: Show dashboard
       reset: Delete all
+      save_key: "Please save the key in a secret management system. We won't be able to show the key to you again. New API key:"
     new:
       new_api_key: New API key
     reset:

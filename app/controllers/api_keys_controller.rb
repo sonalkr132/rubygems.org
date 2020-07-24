@@ -3,6 +3,7 @@ class ApiKeysController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
 
   def index
+    @api_key  = session.delete(:api_key)
     @api_keys = current_user.api_keys
     redirect_to new_profile_api_key_path if @api_keys.empty?
   end
@@ -18,8 +19,8 @@ class ApiKeysController < ApplicationController
     if @api_key.save
       Mailer.delay.api_key_created(@api_key.id)
 
-      flash[:notice] = t(".save_key", key: key)
-      redirect_to profile_api_keys_path
+      session[:api_key] = key
+      redirect_to profile_api_keys_path, flash: { notice: t(".success") }
     else
       flash[:error] = @api_key.errors.full_messages.to_sentence
       render :new

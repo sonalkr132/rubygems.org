@@ -8,7 +8,7 @@
     <%= label_tag :scope, t("api_keys.index.scope"), class: "form__label" %>
     <% ApiKey::API_SCOPES.each do |api_scope| %>
       <div class = "form__checkbox__item">
-        <%= f.check_box "#{api_scope}", { class: "form__checkbox__input" } , "true", "false" %>
+        <%= f.check_box "#{api_scope}", { class: "form__checkbox__input", id: "#{api_scope}" } , "true", "false" %>
         <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
       </div>
     <% end %>

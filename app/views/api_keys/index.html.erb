@@ -1,5 +1,14 @@
 <% @title = t(".api_keys") %>
 
+<% if @api_key %>
+  <div class="t-body push--bottom-s">
+    <p>
+      <%= t(".save_key") %>
+      <span> <code><%= @api_key %></code> </span>
+    </p>
+  </div>
+<% end %>
+
 <div class="t-body">
   <div class="table">
     <div class="row row__header">
@@ -25,7 +34,7 @@
           <%= i18n_api_scopes api_key %>
         </div>
         <div class="cell">
-          <%= t(".time_ago", time: time_ago_in_words(api_key.created_at)) %>
+          <%= api_key.created_at %>
         </div>
         <div class="cell">
           <%= link_to t(".delete"),
@@ -55,5 +64,5 @@
     </div>
   </div>
 
-  <p><%= link_to t(".new_key"), new_profile_api_key_path, class: "t-link t-link--has-arrow" %></p>
+  <p><%= button_to t(".new_key"), new_profile_api_key_path, method: "get", class: "form__submit" %></p>
 </div>

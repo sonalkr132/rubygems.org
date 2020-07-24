@@ -57,7 +57,7 @@ es:
         unpwn:
   api_keys:
     create:
-      save_key:
+      success:
     destroy:
       success:
     index:
@@ -65,7 +65,6 @@ es:
       name:
       scope:
       created_at:
-      time_ago:
       delete:
       confirm:
       confirm_all:
@@ -78,6 +77,7 @@ es:
       webhook_actions:
       show_dashboard:
       reset:
+      save_key:
     new:
       new_api_key:
     reset:

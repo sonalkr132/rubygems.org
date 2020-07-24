@@ -84,6 +84,7 @@ class ApiKeysControllerTest < ActionController::TestCase
           api_key = @user.api_keys.last
 
           assert_equal "test", api_key.name
+          assert @controller.session[:api_key]
           assert api_key.add_owner?
         end
         should "deliver api key created email" do

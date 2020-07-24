@@ -17,7 +17,7 @@ class ApiKeysTest < SystemTest
     check "api_key[index_rubygems]"
     click_button "Create"
 
-    assert page.has_content? "Please save this key in a secret management system"
+    assert page.has_content? "Please save the key in a secret management system"
   end
 
   test "deleting api key" do
