@@ -124,6 +124,34 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
       end
     end
+
+    context "on PUT to update with incorrect OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = "11111"
+        put :update
+      end
+
+      should "deny access" do
+        assert_response 401
+        assert_match I18n.t("otp_incorrect"), @response.body
+      end
+    end
+
+    context "on PUT to update with correct OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        @api_key = create(:api_key, key: "12345", push_rubygem: true)
+
+        put :update, params: { api_key: "12345", index_rubygems: "true" }
+        @api_key.reload
+      end
+
+      should respond_with :success
+      should "keep current scope enabled and update scope in params" do
+        assert @api_key.index_rubygems?
+        assert @api_key.push_rubygem?
+      end
+    end
   end
 
   # this endpoint is used by rubygems
@@ -176,6 +204,17 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     setup do
       authorize_with("bad:creds")
       post :create
+    end
+    should "deny access" do
+      assert_response 401
+      assert_match "HTTP Basic: Access denied.", @response.body
+    end
+  end
+
+  context "on PUT to update with bad credentials" do
+    setup do
+      authorize_with("bad:creds")
+      put :update
     end
     should "deny access" do
       assert_response 401

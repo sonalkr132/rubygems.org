@@ -19,9 +19,27 @@ class Api::V1::ApiKeysController < Api::BaseController
 
       check_mfa(user) do
         key = generate_unique_rubygems_key
-        api_key = user.api_keys.build(api_key_params.merge(hashed_key: hashed_key(key)))
+        api_key = user.api_keys.build(api_key_create_params.merge(hashed_key: hashed_key(key)))
 
         save_and_respond(api_key, key)
+      end
+    end
+  end
+
+  def update
+    authenticate_or_request_with_http_basic do |username, password|
+      user = User.authenticate(username, password)
+
+      check_mfa(user) do
+        api_key = ApiKey.find_by(hashed_key: hashed_key(params[:api_key]))
+        return render_unauthorized unless api_key
+
+        if api_key.update(api_key_update_params)
+          render plain: "Scopes for the API key #{api_key.name} updated"
+        else
+          errors =  api_key.errors.full_messages
+          render plain: "Failed to update scopes for the API key #{api_key.name}: #{errors}", status: :unprocessable_entity
+        end
       end
     end
   end
@@ -60,7 +78,11 @@ class Api::V1::ApiKeysController < Api::BaseController
     request.headers["HTTP_OTP"]
   end
 
-  def api_key_params
+  def api_key_create_params
     params.permit(:name, *ApiKey::API_SCOPES)
+  end
+
+  def api_key_update_params
+    params.permit(*ApiKey::API_SCOPES)
   end
 end
