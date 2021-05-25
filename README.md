@@ -1,5 +1,5 @@
 # RubyGems.org (née Gemcutter)
-The Ruby community's gem host.
+Th Ruby community's gem host.
 
 ## Purpose
 
